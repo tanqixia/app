@@ -9,7 +9,7 @@ config = ConfigManager()
 
 
 def main_gui():
-    title = "扫码盘点登记软件"
+    title = "therealreal加购软件"
     root = ttk.Window(title=title,
                     themename="superhero",
                     size=(1500, 720),
@@ -25,22 +25,22 @@ def main_gui():
     tab1 = ttk.Frame(notebook)
     notebook.add(tab1, text="主界面")
 # region 登录注册组件
-    top1_frame = ttk.Frame(tab1)
-    top1_frame.grid(row=0, column=0, sticky=E,columnspan=2)
+    # top1_frame = ttk.Frame(tab1)
+    # top1_frame.grid(row=0, column=0, sticky=E,columnspan=2)
 
 
-    # 左边的空间占据所有可用空间
-    # spacer = ttk.Frame(top1_frame)
-    # spacer.grid(row=0, column=0, sticky=(W, E))
+    # # 左边的空间占据所有可用空间
+    # # spacer = ttk.Frame(top1_frame)
+    # # spacer.grid(row=0, column=0, sticky=(W, E))
     
   
-    # 用户信息显示
-    user_info = ttk.Label(top1_frame, text="未登录", style=SUCCESS, font=("楷体", 14, "bold"))
-    user_info.grid(row=0, column=0, padx=10, pady=3, sticky=E)  # 注意这里改为sticky=W，因为紧挨着log_button右边
+    # # 用户信息显示
+    # user_info = ttk.Label(top1_frame, text="未登录", style=SUCCESS, font=("楷体", 14, "bold"))
+    # user_info.grid(row=0, column=0, padx=10, pady=3, sticky=E)  # 注意这里改为sticky=W，因为紧挨着log_button右边
 
-    # 登录/注册按钮
-    log_button = ttk.Button(top1_frame, text="登录/注册", command=lambda: login_and_register(user_info, log_button, root,tab2_text_windge_dict))
-    log_button.grid(row=0, column=1, padx=10, pady=3, sticky=W)
+    # # 登录/注册按钮
+    # log_button = ttk.Button(top1_frame, text="登录/注册", command=lambda: login_and_register(user_info, log_button, root,tab2_text_windge_dict))
+    # log_button.grid(row=0, column=1, padx=10, pady=3, sticky=W)
     
 # endregion
     
