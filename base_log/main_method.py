@@ -133,7 +133,7 @@ def login(page,username: str, password: str) -> str:
     # 输入用户名
     page.ele("t:input@@id=user_email@@name=user[email]").input(username,clear=True)
     #  输入密码
-    page.ele("#^=user_passwor@@tabindex='0'")[-1].input(password,clear=True)
+    page.ele("#^=user_passwor@@tabindex='0'").input(password,clear=True)
     page.eles("t:input@@class=button button--primary button--featured button--capped-full-width form-field__submit js-track-click-event")[1].click()
     # 等待加载完成
     # page.wait_for_load_complete()
