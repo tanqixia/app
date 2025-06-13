@@ -53,8 +53,8 @@ if __name__ == '__main__':
     co1 = ChromiumOptions().set_local_port(9222)
     page = Chromium(co1).latest_tab
     # 这里可能会出现验证
-    # page.set.cookies(cookie)
-    # open_url_get_shop_url(page,bags)
+    page.set.cookies(cookie)
+    open_url_get_shop_url(page,bags)
 
     # shop_list,link_list = get_shop_urls(page)
 
@@ -106,24 +106,24 @@ if __name__ == '__main__':
 
 
 
-    import requests
-    good_id = id_list[0]
-    session_id = session_id_list[3]
-    query_id = query_id_list[3]
+    # import requests
+    # good_id = id_list[0]
+    # session_id = session_id_list[3]
+    # query_id = query_id_list[3]
 
-    url = 'https://www.therealreal.com/cart/items'
-    form_data = {
-        'id': good_id,
-        '_analytics_session_id': session_id,
-        'return_product_id': '',
-        'protection_product_id': '',
-        'query_id': query_id
-    }
+    # url = 'https://www.therealreal.com/cart/items'
+    # form_data = {
+    #     'id': good_id,
+    #     '_analytics_session_id': session_id,
+    #     'return_product_id': '',
+    #     'protection_product_id': '',
+    #     'query_id': query_id
+    # }
 
-    # 发送POST请求
-    response = requests.post(url, data=form_data,headers=headers,cookies=cookie_dict)
-    print(response.status_code)
-    # TODO: 这里返回的代码如果是200，就代表架构成功，如果是403表示遇到了人机验证，需要进行人机验证
+    # # 发送POST请求
+    # response = requests.post(url, data=form_data,headers=headers,cookies=cookie_dict)
+    # print(response.status_code)
+    # # TODO: 这里返回的代码如果是200，就代表架构成功，如果是403表示遇到了人机验证，需要进行人机验证
 
     
     # print(response.text)

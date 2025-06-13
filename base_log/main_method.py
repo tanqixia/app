@@ -94,9 +94,12 @@ def read_urls_from_csv(filename='link_data.csv'):
 
 
 
-def open_url_get_shop_url(page:Chromium,url_class: str) -> list:
+def open_url_get_shop_url(page:Chromium,url_class: str,page_num = None) -> list:
     """打开指定商品类目的URL链接"""
-    url = "https://www.therealreal.com/products?keywords=chrome%20hearts%20"+url_class
+    if page_num is  None:
+        url = "https://www.therealreal.com/products?keywords=chrome%20hearts%20"+url_class
+    else:
+        url = "https://www.therealreal.com/products?keywords=chrome%20hearts%20"+url_class+"&page="+str(page_num)
     page.get(url)
 
 def get_shop_urls(page:Chromium): # 后期可以改成直接传入页面ID，通过页面ID去获取，这样可以同时获取多个页面的链接
@@ -123,21 +126,31 @@ def get_shop_urls(page:Chromium): # 后期可以改成直接传入页面ID，通
 def login(page,username: str, password: str) -> str:
     """以下是登录测试，后期再打包成函数"""
     start_time = time.time()
+    page.listen.start('https://www.therealreal.com/sessions')
     try:
         page.eles("t:a@@text()=Member Sign In")[1].click()
     except:pass
     # 输入用户名
-    page.ele("#user_email_").input(username,clear=True)
+    page.ele("t:input@@id=user_email@@name=user[email]").input(username,clear=True)
     #  输入密码
-    page.ele("#user_password_").input(password)
+    page.eles("#^=user_password@@name=user[password]")[-1].input(password,clear=True)
     page.eles("t:input@@class=button button--primary button--featured button--capped-full-width form-field__submit js-track-click-event")[1].click()
+    # 等待加载完成
+    # page.wait_for_load_complete()
+    # 或者可以监听https://www.therealreal.com/sessions网址的返回是否是200
+    
+    res = page.listen.wait()
+    print(res)
     print(f"登录用时：{time.time()-start_time}秒")
 
 
+def get_page_cont(page: Chromium):
+    page_cont = page.ele("t:nav@@class=plp-header-controls__pagination ").text
+    # print(f"得到的长度是：{page_cont.split("\n")}")
+    return page_cont.split("\n")
 
-if __name__ == '__main__':
-
-    co1 = ChromiumOptions().set_local_port(9222)
+def get_shop_save_csv():
+    co1 = ChromiumOptions().set_local_port(9225).set_user_data_path('data1')
     page = Chromium(co1).latest_tab
     page.get('https://www.therealreal.com/')
     username = "vintedfr1@163.com"
@@ -151,9 +164,23 @@ if __name__ == '__main__':
     # 打开商品搜索页面
     shop_list = ["betls","bags","jewelry"]
     for shop_class in shop_list:
+        # 遍历每个页面
         open_url_get_shop_url(page,shop_class)
         shop_list,link_list = get_shop_urls(page)
-        write_lists_to_csv(urls = link_list,names = shop_list)
+        write_lists_to_csv(urls = link_list,names = shop_list,model="w")
+        page_list = get_page_cont(page) # 得到页码列表
+        # 如果分页大于1，则循环遍历其他页面，进行保存数据
+        if len(page_list)  > 1:
+            for page_num in page_list[1:]:
+                open_url_get_shop_url(page,shop_class,page_num)
+                shop_list,link_list = get_shop_urls(page)
+                write_lists_to_csv(urls = link_list,names = shop_list)
+    print("保存完成")
+
+if __name__ == '__main__':
+    get_shop_save_csv()
+
+
 
 
 
