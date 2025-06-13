@@ -8,6 +8,9 @@ version = "1.0.25.4.17"
 # 账号：vintedfr1@163.com  
 # 密码：Chen1122@
 
+# 品牌名是 = chrome hearts
+# 类目是 = [bags,betls,jewelry]
+
 tip_widget = None # 主界面用于显示通知的控件
 
 
