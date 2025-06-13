@@ -3,6 +3,9 @@ import csv
 import os
 from typing import Union, List, Set
 from DrissionPage import Chromium,ChromiumOptions
+import requests
+import time
+import base.global_var as gv
 
 
 
@@ -118,24 +121,49 @@ def get_shop_urls(page:Chromium): # 后期可以改成直接传入页面ID，通
 
 
 def login(page,username: str, password: str) -> str:
-        # 以下是登录测试，后期再打包成函数
-    # cookies = page.cookies(all_domains=False).as_dict()
-    # print(cookies)
-
-    # try:
-    #     page.eles("t:a@@text()=Member Sign In")[1].click()
-    # except:pass
-
-    # page.ele("#user_email_").input("vintedfr1@163.com",clear=True)
-    # page.ele("#user_password_").input("Chen1122@")
-    # page.eles("t:input@@class=button button--primary button--featured button--capped-full-width form-field__submit js-track-click-event")[1].click()
-    pass
+    """以下是登录测试，后期再打包成函数"""
+    start_time = time.time()
+    try:
+        page.eles("t:a@@text()=Member Sign In")[1].click()
+    except:pass
+    # 输入用户名
+    page.ele("#user_email_").input(username,clear=True)
+    #  输入密码
+    page.ele("#user_password_").input(password)
+    page.eles("t:input@@class=button button--primary button--featured button--capped-full-width form-field__submit js-track-click-event")[1].click()
+    print(f"登录用时：{time.time()-start_time}秒")
 
 
 
 if __name__ == '__main__':
 
-    from DrissionPage import Chromium
+    co1 = ChromiumOptions().set_local_port(9222)
+    page = Chromium(co1).latest_tab
+    page.get('https://www.therealreal.com/')
+    username = "vintedfr1@163.com"
+    password = "Chen1122@"
+    # 登录
+    login(page,username,password)
+    # 获取网站COOKIE
+    cookies_dict = ger_cookies(page)
+    # 设置网站COOKIE
+    set_cookies(page,cookies_dict)
+    # 打开商品搜索页面
+    shop_list = ["betls","bags","jewelry"]
+    for shop_class in shop_list:
+        open_url_get_shop_url(page,shop_class)
+        shop_list,link_list = get_shop_urls(page)
+        write_lists_to_csv(urls = link_list,names = shop_list)
 
-    tab = Chromium().latest_tab
-    tab.get('http://DrissionPage.cn')
+
+
+
+
+
+
+
+    # url = "https://www.therealreal.com/products?keywords=chrome%20hearts%20bags"
+    # headers = {
+    # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36'}
+    # url_data = requests.get(url,headers=headers)
+    # print(url_data.text)

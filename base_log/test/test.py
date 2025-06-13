@@ -32,7 +32,7 @@ def parse_cookie_string(cookie_str):
 # 针对条件判断的问题，可以设置一个校验，先找到哪个就执行哪个，这样可以避免等待
 
 # user-agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" 
-cookie = "domain=.therealreal.com;_pxhd=ujQYRtl1lxrl5kz23n/qzR-7eIQqxTUidT/HyjDEFWptYrXe6Uz41mEGERb1us7/42v2HW94WXlYMnhB35nm4A==:2x3QpIrl9M6hEvCJsrJm-EcLxJkYENciFhXQ8xpS43aLsbDYjsJk6Pxf908EdiP/Gpp-9ICko7eG-yC5RnE9dDSLQ8zlL-BecFhdDBE-lHY=; __ssid=7790e7333368d740a6ae917f9825162; ajs_anonymous_id=2a0fe5f7-cdca-4ca7-889b-ba107da67416; __adroll_fpc=2b3ee8f03e06ade8d3de4562652f5770-1749742494232; _fbp=fb.1.1749742494418.763437766250198331; _ga=GA1.1.1923684175.1749742495; _evga_0388={%22uuid%22:%2239c8ef5bb4d363fe%22}; _sfid_d56d={%22anonymousId%22:%2239c8ef5bb4d363fe%22%2C%22consents%22:[{%22consent%22:{%22provider%22:%22Ketch%22%2C%22purpose%22:%22Personalization%22%2C%22status%22:%22Opt%20Out%22}%2C%22lastUpdateTime%22:%222025-06-12T15:34:55.194Z%22%2C%22lastSentTime%22:%222025-06-12T15:34:55.195Z%22}]}; _li_dcdm_c=.therealreal.com; _lc2_fpi=a2e7823d27c0--01jxjcf9ffd7f2w3g36rss73xe; _lc2_fpi_js=a2e7823d27c0--01jxjcf9ffd7f2w3g36rss73xe; pxcts=cfe51bb1-47a2-11f0-9ff4-6d5bbd625e23; _pxvid=c6307b80-47a2-11f0-8e8e-209c3c068e2f; _clck=17zls3l%7C2%7Cfwp%7C0%7C1989; _gcl_au=1.1.448495202.1749742494.931392795.1749742509.1749742524; last_logged_in_identifiers=39274561|2169265e-e29c-45b2-9b86-05c510f2ddfd; registered=true; nearby_stores=WzM3XQ; ajs_user_id=39274561; _ga_65FCHSL71W=GS2.1.s1749742494$o1$g1$t1749742526$j28$l0$h0; _ga_VPSCJ11BBF=GS2.1.s1749742495$o1$g1$t1749742526$j29$l0$h332106753; _pin_unauth=dWlkPU9UYzVNVGM0TTJZdE1EVmtOeTAwTWpZNUxUazNZVEF0WVRGa01URXlPVE5sTVRRMQ; _uetsid=cddf1c7047a211f0ac4d61da04e4556d; _uetvid=cddf261047a211f0864b6f2fd4ad7439; _swb=6354870e-91e8-4776-b46c-4226c425cc12; _clsk=1hrsw06%7C1749742531043%7C2%7C1%7Cn.clarity.ms%2Fcollect; _swb_consent_=eyJjb2xsZWN0ZWRBdCI6MTc0OTc0MjUzMSwiZW52aXJvbm1lbnRDb2RlIjoicHJvZHVjdGlvbiIsImlkZW50aXRpZXMiOnsiX3NlZ21lbnRBbm9ueW1vdXNJRCI6IjJhMGZlNWY3LWNkY2EtNGNhNy04ODliLWJhMTA3ZGE2NzQxNiIsIl9zZWdtZW50VXNlcklEIjoiMzkyNzQ1NjEiLCJzd2JfdGhlcmVhbHJlYWxfY29tIjoiNjM1NDg3MGUtOTFlOC00Nzc2LWI0NmMtNDIyNmM0MjVjYzEyIn0sImp1cmlzZGljdGlvbkNvZGUiOiJjcHJhIiwicHJvcGVydHlDb2RlIjoidGhlcmVhbHJlYWxfY29tIiwicHVycG9zZXMiOnsiYW5hbHl0aWNzIjp7ImFsbG93ZWQiOiJmYWxzZSIsImxlZ2FsQmFzaXNDb2RlIjoiY29uc2VudF9vcHRvdXQifSwiYmVoYXZpb3JhbF9hZHZlcnRpc2luZyI6eyJhbGxvd2VkIjoiZmFsc2UiLCJsZWdhbEJhc2lzQ29kZSI6ImNvbnNlbnRfb3B0b3V0In0sImVzc2VudGlhbF9zZXJ2aWNlcyI6eyJhbGxvd2VkIjoidHJ1ZSIsImxlZ2FsQmFzaXNDb2RlIjoiZGlzY2xvc3VyZSJ9fX0%3D; _ketch_consent_v1_=eyJhbmFseXRpY3MiOnsic3RhdHVzIjoiZGVuaWVkIiwiY2Fub25pY2FsUHVycG9zZXMiOlsiYW5hbHl0aWNzIl19LCJiZWhhdmlvcmFsX2FkdmVydGlzaW5nIjp7InN0YXR1cyI6ImRlbmllZCIsImNhbm9uaWNhbFB1cnBvc2VzIjpbImJlaGF2aW9yYWxfYWR2ZXJ0aXNpbmciXX0sImVzc2VudGlhbF9zZXJ2aWNlcyI6eyJzdGF0dXMiOiJncmFudGVkIiwiY2Fub25pY2FsUHVycG9zZXMiOlsiZXNzZW50aWFsX3NlcnZpY2VzIl19fQ%3D%3D; _dd_s=rum=0&expire=1749743610965; __ar_v4=OF3FCM4OFZG4TLJK7JEAAV%3A20250612%3A3%7CBBODAYSHJJDRLP6HI5M56H%3A20250612%3A3%7CWEGDQEKGEZBIVDDMGIEHGG%3A20250612%3A3; _session_id=c3ltZXNmNTlJTXl3UXFabEQwZHBMOFBVNGE3WTBHbEVlanJ4eHM3TE1lUks0eG5nQTVtVTQxNWZBY1pmZ243aEZEQWx0UG5kUitGNERmY1p6TU9CVjU0ZzAvMDMwU1RjWEVqRHZkMjRhM0pJT1ZLQllLZm5NNEIrY3NSM0hvTFlSUndhVzM3UFJPT2xOaVpkRE9vcTVsMjFvbWVxdGxaenJTeVFqeTJsbTRHV0dNR2QwekVRR2RmaHV4ams1eDJJODdya3JjemcvL3FuRkVnU2pqR2J4UE1PL2JFMnQ3QmhCd0VhTFArSEZFOWlaSTBSbEpsRmRQelhqVFl3Vy9nTk9EdThwRmIxclFEWm9McTRzWjFmeXlZMzIvd2czQWM1bTVPK3Rha3BrTldiZVVsR005QU1EeVd2L3pWakxCU1NxSmhmU3EzTE55blI1Z3IydGdXT0tKMkRHbDh6Uzl1bExnekdDdHZVdnFsUlFyZGtudkNUVmUxTWo4TElYT21EenFOY2hwMk9YZXhReXU5SWNka0ZpV0JUZGY2dGMxT2ZlSEtVV0JZZlk5Y21MWUcwdWZrODhDZitZYVdrUUNqRnh6N0ZERE9JS0o4UytEU1UySlVDeUY0U0pENkZ3bklwZ0YzK21MR0JqYjR1ZGVSTUxPVGlMUC9EWUFMcHpNbVdYNG1JVmRBN0NzZFFBeXU2dFdCRDhxc2tESit2bmt5eTZpOUFrT1d1ZUp1czFpYmMrQjlaZUFoZFJ1bU8reFYvVHBRODlEMTBNcGVNcDRrS3gycXhnWGJrS3cwZVVndkVBb1JaSGlHRTU3NUdEalRFN1pJdkhjTmhTQ00zZjNyUEtwSkhiN3M0K1gva2dMMUIydVA2dGNNOVgxWjI2bnBwRnU0cDdtSmVOZ3pWZFNzbzBSNXJPOWhQS2xQclJpNVJXUFFJcWNLbkVUSlNleERYT0xZeVJPZkRRM0hQcUFCQ1ZqMklNRVZMOG13YUxSSkduakxOSlZibTRBRDBHRUhJV25sdjhNVEd5TWNHRVBGejhoWVhaL1k1SldteERuMThxdDQxNTRkdDg2U2M2QXBPTnZnYkVjSXZpemlqSjJTTTU0eHhURnRaVFl4c1JzYUdoVm9YVE9oeHI4ZktDOW1SREpnMDJsTDQ4OEp4Z1FSWWxBWXViL3h6RFJiOWxFdVRBbDYxLzJwcjlmWG9CQnFNNHBHRWtvSWRDVmpGdGorQTBZT3RROE9oRk9lNVA2d2NmSkh6VkdhaVdySlZxdm1QdEJyckorU0Z2MW9IeWdmT0lvR0ovNEhBZUNlbHFiZHVvLy9tL1Iwei8wdnRKWkpjb0JJa0U2c3RaVm1lai81ZUM5SGszVWgzWUZNaDZJQmlKbmJETHVvTERZR09lalJtMDhjMSs5TmNzWXo0S1IxUVdzOGlzcjU3bUhBTjZ0MXU5MVU5M0Ryd1hhNVVyL3U2Tkt5S3IrOUx2eVh0eGNKakZmTXMvUytHMGw2c3JOK2czbkNCN1IvczBHQ0NnY0hJeFplQUh1cDQ0QmpuNEdPZ0NKVFhMRjlFaU02bm5UMHl6ZGRqUHprOS9yRFYxMGdyQXF5MXpZaFBrV1FQeXNqN0R1ZjNRZmlGdTJOZXRhdzd0dGxLN0JuMWNWM3ljS3hZK1F0SDdwaThZUUl4eGEydEt0T3FVU3dxOFpGM1F6OXA4OHRzZVlTRUtsSXdPdFFtbk5Nd3l6cjEwTzhWOGZqRlpvVDArMW8wVStsWUhKdWxPcGJ0dnRhNTVjYXp5QlRheE40aGJGNmFIRStibHpxVldQVVlzekFnZC9mQ0dzck1KbmcrUTZ2aVEraXZZY3VNVitYRzRpMHg4dktkeHdqamplODZBRDVsc3NqVVpPZlhUM1d5b0FadnUydW1UZUs2YzY5TGt0SitOM1M0cFZJdUZpZ1VyQVF1OU9rZ0tZem96MjR4NlhCT3FPZlI1UXhRNUR3ZUpYOWpRZXIraFJjNFhxZlpRVWloaXh2SG1JZjlybHgxSVVTWnVZK09keEI0WjNQdTAyenFuNEZnZGF1d0F5MndTdz09LS1HV0JWdExrbWMxTVVkMUMrQ2dTai93PT0%3D--31da583c6cf67a61ef9a20111150f3a312f3aee4; _pxde=a6215b8a201ed1af0860c45ca5a4e3ae3e75362bd06d84b5b2184f3f545e846e:eyJ0aW1lc3RhbXAiOjE3NDk3NDI3MjUyNDksImZfa2IiOjB9"
+cookie = "domain=.therealreal.com;__adroll_fpc=2b3ee8f03e06ade8d3de4562652f5770-1749742494232; _fbp=fb.1.1749742494418.763437766250198331; _pin_unauth=dWlkPU9UYzVNVGM0TTJZdE1EVmtOeTAwTWpZNUxUazNZVEF0WVRGa01URXlPVE5sTVRRMQ; _ketch_consent_v1_=eyJhbmFseXRpY3MiOnsic3RhdHVzIjoiZGVuaWVkIiwiY2Fub25pY2FsUHVycG9zZXMiOlsiYW5hbHl0aWNzIl19LCJiZWhhdmlvcmFsX2FkdmVydGlzaW5nIjp7InN0YXR1cyI6ImRlbmllZCIsImNhbm9uaWNhbFB1cnBvc2VzIjpbImJlaGF2aW9yYWxfYWR2ZXJ0aXNpbmciXX0sImVzc2VudGlhbF9zZXJ2aWNlcyI6eyJzdGF0dXMiOiJncmFudGVkIiwiY2Fub25pY2FsUHVycG9zZXMiOlsiZXNzZW50aWFsX3NlcnZpY2VzIl19fQ%3D%3D; last_logged_in_identifiers=39274561|2169265e-e29c-45b2-9b86-05c510f2ddfd; enable_similar_links_on_available_plp-initial-exp=variant; registered=true; nearby_stores=W10; _pxhd=PlgLotoM3ZwVGAXCNeRk4/UU3VS/qSj5ATIaDdln6TPf95kNS55fbKcyLV143graF214yepFrqjl30DMAtHp4Q==:y7iPXk0SRs5VYEtE9jECZZaaBFBxjT5WxbcHQpq2jQDiQmFJUT0lEpE-M/hOO6NeTOw1A8hKgm-4vsCjnbLU3z5WNfMQDWY1bpNPIADdrjU=; __ssid=c8c9c028ee93af00ca64a4a7983726a; pxcts=364bf138-481b-11f0-835f-4acf90ac2806; _pxvid=c6307b80-47a2-11f0-8e8e-209c3c068e2f; _px2=eyJ1IjoiMzVkZjUxMzAtNDgxYi0xMWYwLWJmYzQtMzMyMjY4ZTAzZDBjIiwidiI6ImM2MzA3YjgwLTQ3YTItMTFmMC04ZThlLTIwOWMzYzA2OGUyZiIsInQiOjE1NjE1MDcyMDAwMDAsImgiOiJlNGYwYmU1NjA4OWM1ZjUxN2RhOTNhZGUzMTgyOTM1OTJkYjBlZjJhNDU4ODNjNTY2YzBlZWQxNjM0ZWE3NmE5In0=; checkout_continuity_service=ef5468b9-0da3-4711-a04c-9521865e14dd; tracker_device=ef5468b9-0da3-4711-a04c-9521865e14dd; ajs_user_id=39274561; ajs_anonymous_id=16393dbd-6bde-4ede-a5db-522b5bd97dce; _swb=344ee44f-f02b-45d7-b895-76bc9745b8e5; _swb_consent_=eyJjb2xsZWN0ZWRBdCI6MTc0OTc5NTA4MiwiZW52aXJvbm1lbnRDb2RlIjoicHJvZHVjdGlvbiIsImlkZW50aXRpZXMiOnsiX3NlZ21lbnRBbm9ueW1vdXNJRCI6IjE2MzkzZGJkLTZiZGUtNGVkZS1hNWRiLTUyMmI1YmQ5N2RjZSIsIl9zZWdtZW50VXNlcklEIjoiMzkyNzQ1NjEiLCJzd2JfdGhlcmVhbHJlYWxfY29tIjoiMzQ0ZWU0NGYtZjAyYi00NWQ3LWI4OTUtNzZiYzk3NDViOGU1In0sImp1cmlzZGljdGlvbkNvZGUiOiJkZWZhdWx0IiwicHJvcGVydHlDb2RlIjoidGhlcmVhbHJlYWxfY29tIiwicHVycG9zZXMiOnsiYW5hbHl0aWNzIjp7ImFsbG93ZWQiOiJmYWxzZSIsImxlZ2FsQmFzaXNDb2RlIjoiY29uc2VudF9vcHRpbiJ9LCJiZWhhdmlvcmFsX2FkdmVydGlzaW5nIjp7ImFsbG93ZWQiOiJmYWxzZSIsImxlZ2FsQmFzaXNDb2RlIjoiY29uc2VudF9vcHRpbiJ9LCJlc3NlbnRpYWxfc2VydmljZXMiOnsiYWxsb3dlZCI6InRydWUiLCJsZWdhbEJhc2lzQ29kZSI6ImRpc2Nsb3N1cmUifX19; _session_id=SUdQTTFMZnQ3WStWTmZubnNCcU43UmpYY1hWbCt0OHN6SklBSVVseHNQdEx3ckxYR3JxR2ZDVjJVVHQyVDRjb1RVQk5lZTYzMXRYRDRkc2cybXVjOUhPVjkrb2VPWFZNczdqOURPcGI4RHQ2VlZkbkg0eGpwNUNJMGo1R0hiSDlwYnJKMXc2TkRDNkwzMTJhdnNtSUFRLzZHWFIyZUp1MHdxenJUU0xRaytHL1E5TnpLZSs3N2VGNndneFl5aVZsK01xckpQS1pJUU5XZmx0Uy9mK01UUnpkUkZSd1B5dFBRN1N0ZWJ1ZDdHUGJ2Yld2dE5KR0xIcDk2L0FHWVRhZENDbGh5dUVMZ3gxZFdHRVo4Ym1LRU53T1F1dkFjTzliRFVUT2ZybUQrS1ZVQXNmajNycnM5QWpjM3RmMnVka1VSTHRsM0Fva3pjdEJNZEp2SkF5UzI1dnlTUFRqVVFtZkdVTDBpNGEweFJFYmdEbTlURFRMZXQrT2tIeUpJWTVTb0dvL3NVNjQ3cHNMZGxjdHhrQnFjNDE1Mko2YW5mMkN0SXk0THc2dnh1Wit1MkdjR3NxOE0yMmpSR0FTRjhDQWw5M1hRdzgwdnh1ZGZnZDNwZC9YK3ZBWWdibWQzc2RlU1EvOVE5NjhWTGFEc2xlQng0dit4am55L2JWcllFUjUvdFpGOEFWUlBoSjRkMkNlTHdRbjdwbjA1QnU2dDFOZHZCeW5Da3NDVkxtS0pmMXlMTzZIN0RiM3dVTkh6SWRBcXZlUjJjUDFLYUFtQVp5KzVyakMyRWFLcVhMUHBsTWFGdGtnWlkzNkVGeTMwUko5QXduVUpSZ2JLYWFYOHQzQ0RONndOWTMrOU9wUkw2ZW5GaDNqQy9tWndsUnBKcEtlVW1xTEZ0QkhxN0tDcDRNMU1SWnZQc0pnQ2QvZEwzV3ZWZ2pzVVorbUpFdGJIT1ovbU5wQWc4QisrSXZ5ZCs4SkpDVi9BbE5tZkM5TEpIaGhZZW1CL2tuZk1rQWszRGFIYllTU1dnRWpSU1M1MStuUThUSE9OZmZOd3VINHFJN3lVN0cwdDRjNWg3QVJxV29GVTVLUmdSQnVSaE1sZnFtaXE1a1dnTEJobGU4WmhIbFVHanhEdHp6V1RvUytkWTRmNExyeUQrUkloa0NlbU1tbmwrUGFhT1M2TU1URzJ0eU4wblM2Mm9KdUJXL2ZIWVlYMFVQM3VPcnB1dFNKWEszUTlNRFBDd284SGZXdXd6djZ1Q1RXcmpJa3hCdEh4bVFIK2Q1anJWYXBPaFBKREFidFlDMDVjeG93UWlVZ1JnQmgydmluRnFMNzZ0bjBrSFlFbVFsdDMyV0hVUjRYdlVtV3Y1WFVJSnBHTVZRRWs1MG0rM0NCc2dyck1SOFRLMFNrNGNNZVFHSk9vWGY0MVA0S0Fvd3hIL0VhSFBXZGc2STJzNW9oYXlGTWpJM05xS3oxZHZ2dVhUS3ZUcHA3bFQwcUc0M3FiNkE4bUc3eVhxZ2xzMWViZ2hJbHBKZktLNlIwSStBWHIyM0tOUE0xcFFyZjI5K0ViYlh1ZU5HSUd4Rk9jK1pYbUJCdi9wbG1XaVdFY2U0WUhsVVo3dkZjbnE2ZWk1ME1TNFJwRkFHMktPckNTaTFOeFZlQlpQZElyT041TE9obGNjelFVTE8rM1Uzd2I2ZVlpUzVmVDU5eVMrVGphTzlNeTFTbHkxMTJlaG5paTFRcktldXFvVWJsamoweHZ1L3orbVUxSCthVC9zSWNJWjlMY0VXNjJYRHYzWndIUmVqVzZlREg4czl0N3NzMnUxZzdxa05LU0JqeFVNeWh6M3MwT3YwUHo0N25admE0RnZ4K3dMRnBpcHQzRTkxc3Q2QUxoTXo5cUdpaVV4NDk4UmV6NmZHUWZyamlDTjVFazF2UEpHQWtJY2ZySTR5NC9SMmhaa2RoZDB0VlI2NFIzUDBFYjE2RUhZU2RFTWE2cGkxL283QXY5RDdjL0hPdDI5Y3YrK1l0ODJRVnVJemczWDlpclpnd1NSQ1hxMTdVbWJrS1JuZE01elFqZUxhbEVFakdBWmdpV1V3UStCYlg2bXg0QTRSTjgxQT0tLXlCZEJnSWhxa0tSSmxoQzV6VWVHanc9PQ%3D%3D--342eed8b7fa398f6a390f16a68877836f3a8924a; __ar_v4=OF3FCM4OFZG4TLJK7JEAAV%3A20250612%3A7%7CBBODAYSHJJDRLP6HI5M56H%3A20250612%3A7%7CWEGDQEKGEZBIVDDMGIEHGG%3A20250612%3A8; _dd_s=rum=0&expire=1749796003451; _pxde=6659092b2736bd8fbe2e78d7a5632f2e3b2f8b1b68fcfc41f4d8a3f515c56ced:eyJ0aW1lc3RhbXAiOjE3NDk3OTUxMDQ5NTcsImZfa2IiOjB9"
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36'}
@@ -78,21 +78,27 @@ if __name__ == '__main__':
 
     id_list_eles = shop_list.eles('@@class=product-card-wrapper js-product-card-wrapper')
     start_time = time.time()
+    id_list = []
+    session_id_list = []
+    query_id_list = []
     for i_ele in id_list_eles:
 
         # print(f"i是{i}")
         base_ele = i_ele.ele("@@class=product-card js-plp-product-card ") # 可以获取id，也就是.attr("id")
         # 获得ID属性
         id  = base_ele.attr("data-product-id")
+        id_list.append(id)
         # print(f"id是{id}")
         # 获得_analytics_session_id属性
         _analytics_session_id_ele = base_ele.ele("@@class=obsession-container js-obsess-box-container").ele("t:button")
         _analytics_session_id = _analytics_session_id_ele.attr("data-analytics-session-id")
         # print(f"_analytics_session_id的值是{_analytics_session_id}")
+        session_id_list.append(_analytics_session_id)
         # 获得query_id
         dict_str = _analytics_session_id_ele.attr("data-analytics-attributes")
         query_id = json.loads(dict_str)["queryID"]
         print(f"query_id的值是{query_id},类型是{type(query_id)}")
+        query_id_list.append(query_id)
 
 
     print(f"耗时是{time.time()-start_time}")
@@ -101,20 +107,25 @@ if __name__ == '__main__':
 
 
     import requests
+    good_id = id_list[0]
+    session_id = session_id_list[3]
+    query_id = query_id_list[3]
 
     url = 'https://www.therealreal.com/cart/items'
     form_data = {
-        'id': '43822113',
-        '_analytics_session_id': '1749787048157',
+        'id': good_id,
+        '_analytics_session_id': session_id,
         'return_product_id': '',
         'protection_product_id': '',
-        'query_id': '85c042f65b8ff0ea3d56c3950bab43ef'
+        'query_id': query_id
     }
 
     # 发送POST请求
     response = requests.post(url, data=form_data,headers=headers,cookies=cookie_dict)
-
     print(response.status_code)
+    # TODO: 这里返回的代码如果是200，就代表架构成功，如果是403表示遇到了人机验证，需要进行人机验证
+
+    
     # print(response.text)
     # print(f"id_list_eles的长度是{len(id_list_eles)}")
     # for  id in id_list_eles:

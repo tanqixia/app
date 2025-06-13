@@ -4,8 +4,9 @@ app_info_dict = {} # 应用信息
 CONFIG_FILE = 'base/config.ini'
 version = "1.0.25.4.17"
 
+user_cookies = {}
 # https://www.therealreal.com/
-# 账号：vintedfr1@163.com  
+# 账号：vintedfr1@163.com
 # 密码：Chen1122@
 
 # 品牌名是 = chrome hearts
