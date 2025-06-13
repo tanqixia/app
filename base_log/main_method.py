@@ -133,7 +133,7 @@ def login(page,username: str, password: str) -> str:
     # 输入用户名
     page.ele("t:input@@id=user_email@@name=user[email]").input(username,clear=True)
     #  输入密码
-    page.eles("#^=user_password@@name=user[password]")[-1].input(password,clear=True)
+    page.ele("#^=user_passwor@@tabindex='0'")[-1].input(password,clear=True)
     page.eles("t:input@@class=button button--primary button--featured button--capped-full-width form-field__submit js-track-click-event")[1].click()
     # 等待加载完成
     # page.wait_for_load_complete()
@@ -150,7 +150,7 @@ def get_page_cont(page: Chromium):
     return page_cont.split("\n")
 
 def get_shop_save_csv():
-    co1 = ChromiumOptions().set_local_port(9225).set_user_data_path('data1')
+    co1 = ChromiumOptions().set_local_port(9226).set_user_data_path('data1')
     page = Chromium(co1).latest_tab
     page.get('https://www.therealreal.com/')
     username = "vintedfr1@163.com"
