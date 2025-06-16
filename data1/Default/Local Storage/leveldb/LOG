@@ -1,9 +1,2 @@
-2025/06/16-12:38:10.667 8b9c Reusing MANIFEST E:\code\opener\kitchek\app\data1\Default\Local Storage\leveldb/MANIFEST-000001
-2025/06/16-12:38:10.671 8b9c Recovering log #39
-2025/06/16-12:38:10.674 8b9c Reusing old log E:\code\opener\kitchek\app\data1\Default\Local Storage\leveldb/000039.log 
-2025/06/16-12:38:23.935 9da4 Level-0 table #44: started
-2025/06/16-12:38:24.026 9da4 Level-0 table #44: 274124 bytes OK
-2025/06/16-12:38:24.046 9da4 Delete type=0 #39
-2025/06/16-14:15:31.637 9da4 Level-0 table #46: started
-2025/06/16-14:15:31.644 9da4 Level-0 table #46: 28327 bytes OK
-2025/06/16-14:15:31.650 9da4 Delete type=0 #43
+2025/06/16-14:55:57.946 98bc Creating DB E:\code\opener\kitchek\app\data1\Default\Local Storage\leveldb since it was missing.
+2025/06/16-14:55:58.081 98bc Reusing MANIFEST E:\code\opener\kitchek\app\data1\Default\Local Storage\leveldb/MANIFEST-000001

@@ -1,3 +1,2 @@
-2025/06/16-12:38:10.617 6060 Reusing MANIFEST E:\code\opener\kitchek\app\data1\Default\Site Characteristics Database/MANIFEST-000001
-2025/06/16-12:38:10.619 6060 Recovering log #3
-2025/06/16-12:38:10.619 6060 Reusing old log E:\code\opener\kitchek\app\data1\Default\Site Characteristics Database/000003.log 
+2025/06/16-14:55:57.879 9e34 Creating DB E:\code\opener\kitchek\app\data1\Default\Site Characteristics Database since it was missing.
+2025/06/16-14:55:57.952 9e34 Reusing MANIFEST E:\code\opener\kitchek\app\data1\Default\Site Characteristics Database/MANIFEST-000001

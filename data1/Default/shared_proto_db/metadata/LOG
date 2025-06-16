@@ -1,3 +1,2 @@
-2025/06/16-12:38:10.823 81d8 Reusing MANIFEST E:\code\opener\kitchek\app\data1\Default\shared_proto_db\metadata/MANIFEST-000001
-2025/06/16-12:38:10.823 81d8 Recovering log #3
-2025/06/16-12:38:10.824 81d8 Reusing old log E:\code\opener\kitchek\app\data1\Default\shared_proto_db\metadata/000003.log 
+2025/06/16-14:55:58.148 43dc Creating DB E:\code\opener\kitchek\app\data1\Default\shared_proto_db\metadata since it was missing.
+2025/06/16-14:55:58.234 43dc Reusing MANIFEST E:\code\opener\kitchek\app\data1\Default\shared_proto_db\metadata/MANIFEST-000001

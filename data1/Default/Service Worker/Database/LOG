@@ -1,3 +1,2 @@
-2025/06/16-12:38:10.612 567c Reusing MANIFEST E:\code\opener\kitchek\app\data1\Default\Service Worker\Database/MANIFEST-000001
-2025/06/16-12:38:10.616 567c Recovering log #3
-2025/06/16-12:38:10.617 567c Reusing old log E:\code\opener\kitchek\app\data1\Default\Service Worker\Database/000003.log 
+2025/06/16-14:55:58.262 e694 Creating DB E:\code\opener\kitchek\app\data1\Default\Service Worker\Database since it was missing.
+2025/06/16-14:55:58.346 e694 Reusing MANIFEST E:\code\opener\kitchek\app\data1\Default\Service Worker\Database/MANIFEST-000001

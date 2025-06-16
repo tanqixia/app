@@ -222,11 +222,15 @@ def start_get_shop_save_csv():
     
 def add_shop_car(good_id:str,session_id:str,query_id:str,cookie_dict:dict):
     """将商品加入购物车"""
+    if not good_id:
+        raise ValueError("good_id不能为空")
+    if not session_id:
+        raise ValueError("session_id不能为空")
+    if not query_id:
+        raise ValueError("query_id不能为空")
+    if not cookie_dict:
+        raise ValueError("cookie_dict不能为空")
     headers = gv.get_global_var("headers") #  获取请求头
-
-    good_id = good_id
-    session_id = session_id
-    query_id = query_id
 
     url = 'https://www.therealreal.com/cart/items'
     form_data = {
@@ -401,6 +405,13 @@ def car_ele_to_add_car_info(base_ele)->dict:
     _analytics_session_id_ele = base_ele.ele("@@class=obsession-container js-obsess-box-container").ele("t:button")
     session_id = _analytics_session_id_ele.attr("data-analytics-session-id")
 
+    if  not session_id:
+        print("session_id为空")
+    if not good_id:
+        print("good_id为空")
+    if not queryID:
+        print("queryID为空")
+
     return good_id,queryID,session_id
 
 
@@ -420,10 +431,11 @@ if __name__ == '__main__':
     set_cookies(page,cookie)
     cookie = ger_cookies(page)
 
-    url = "/products/men/bags/other/chrome-hearts-leather-cross-shoe-q396f"
+    url = "/products/men/bags/weekenders/chrome-hearts-leather-big-fleur-q38zg"
     css_ele  = "product-card__see-similar-items js-track-click-event"
     
     good_id,queryID,session_id = find_url_add_car_info(page,url)
+    print(f"得到的加购信息是good_id：{good_id}，queryID：{queryID}，session_id:{session_id}")
     add_shop_car(good_id,queryID,session_id,cookie)
 
 

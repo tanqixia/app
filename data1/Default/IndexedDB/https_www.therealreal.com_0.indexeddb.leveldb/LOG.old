@@ -1,7 +1,0 @@
-2025/06/16-12:38:23.101 a5b8 Reusing MANIFEST E:\code\opener\kitchek\app\data1\Default\IndexedDB\https_www.therealreal.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/06/16-12:38:23.101 a5b8 Recovering log #3
-2025/06/16-12:38:23.102 a5b8 Reusing old log E:\code\opener\kitchek\app\data1\Default\IndexedDB\https_www.therealreal.com_0.indexeddb.leveldb/000003.log 
-2025/06/16-14:07:53.491 7594 Level-0 table #5: started
-2025/06/16-14:07:53.498 7594 Level-0 table #5: 824 bytes OK
-2025/06/16-14:07:53.506 7594 Delete type=0 #3
-2025/06/16-14:07:53.506 7594 Manual compaction at level-0 from (begin) .. (end); will stop at (end)
