@@ -6,6 +6,9 @@ from DrissionPage import Chromium,ChromiumOptions
 import requests
 import time
 import base.global_var as gv
+import threading
+from typing import Optional, Union,Tuple, Literal
+import json
 
 
 
@@ -13,7 +16,7 @@ Settings.set_language('zh_cn')  # 设置为中文时，填入'zh_cn'
 
 def ger_cookies(page,url = "https://www.therealreal.com/")->dict:
     """获取网站的COOKIES"""
-    page.get(url)
+    # page.get(url)
     cookies_dict:dict = page.cookies(all_domains=False).as_dict()
     return cookies_dict
 
@@ -118,7 +121,26 @@ def get_shop_urls(page:Chromium): # 后期可以改成直接传入页面ID，通
     return shop_list,link_list
 
     
-
+def parse_cookie_string(cookie_str):
+    """
+    将浏览器格式的Cookie字符串转换为字典
+    支持包含domain/path等属性和复杂值的场景
+    """
+    cookies = {}
+    for item in cookie_str.strip().split(';'):
+        item = item.strip()
+        if not item:
+            continue
+        
+        # 处理键值对（包括domain=xxx这种情况）
+        if '=' in item:
+            key, value = item.split('=', 1)  # 只分割第一个等号
+            cookies[key] = value
+        else:
+            # 处理只有key没有value的属性（如HttpOnly）
+            cookies[item] = None
+    
+    return cookies
 
 
 
@@ -126,21 +148,34 @@ def get_shop_urls(page:Chromium): # 后期可以改成直接传入页面ID，通
 def login(page,username: str, password: str) -> str:
     """以下是登录测试，后期再打包成函数"""
     start_time = time.time()
-    page.listen.start('https://www.therealreal.com/sessions')
-    try:
+    # 或者可以监听https://www.therealreal.com/sessions网址的返回是否是200
+    first_ele = "@@class=info-link underlined-link js-track-click-event@@tabindex=0@@text()=Member Sign In"#登录
+    second_ele = "@@class=info-link underlined-link js-track-click-event@@tabindex=0@@text()=Member Sign Up" #注册
+    status,idex_ele = fast_find_ele(page,first_ele,second_ele)
+    if status is False:
+        print("两个元素都未找到")
+        return idex_ele # 这里返回的是空，表示未找到
+    
+    if idex_ele == "first":
+        # 找到登录元素，点击进行登录
+        print("找到登录元素，进行点击切换到登录页面")
         page.eles("t:a@@text()=Member Sign In")[1].click()
-    except:pass
+    else:
+        # 找到注册元素，直接进行登录
+        print("找到注册元素，直接进行登录")
+
+    page.listen.start('https://www.therealreal.com/sessions')
     # 输入用户名
     page.ele("t:input@@id=user_email@@name=user[email]").input(username,clear=True)
     #  输入密码
     page.ele("@@placeholder=Password@@tabindex=0").input(password,clear=True)
+    page.ele("t:input@@name=user[remember_me]@@tabindex=0").click() # 点击记住我
+
     page.eles("t:input@@class=button button--primary button--featured button--capped-full-width form-field__submit js-track-click-event")[1].click()
     # 等待加载完成
     # page.wait_for_load_complete()
-    # 或者可以监听https://www.therealreal.com/sessions网址的返回是否是200
-    
     res = page.listen.wait()
-    print(res)
+
     print(f"登录用时：{time.time()-start_time}秒")
 
 
@@ -153,11 +188,14 @@ def get_shop_save_csv():
     co1 = ChromiumOptions().set_local_port(9226).set_user_data_path('data1')
     page = Chromium(co1).latest_tab
     page.get('https://www.therealreal.com/')
-    username = "vintedfr1@163.com"
-    password = "Chen1122@"
-    # 登录
-    login(page,username,password)
-    # 获取网站COOKIE
+
+    log_status = is_login(page) 
+    if log_status is False:
+        username = "vintedfr1@163.com"
+        password = "Chen1122@"
+        # 登录
+        login(page,username,password)
+        # 获取网站COOKIE
     cookies_dict = ger_cookies(page)
     # 设置网站COOKIE
     set_cookies(page,cookies_dict)
@@ -177,8 +215,217 @@ def get_shop_save_csv():
                 write_lists_to_csv(urls = link_list,names = shop_list)
     print("保存完成")
 
+
+def start_get_shop_save_csv():
+    t = threading.Thread(target=get_shop_save_csv,daemon=True)
+    t.start()
+    
+def add_shop_car(good_id:str,session_id:str,query_id:str,cookie_dict:dict):
+    """将商品加入购物车"""
+    headers = gv.get_global_var("headers") #  获取请求头
+
+    good_id = good_id
+    session_id = session_id
+    query_id = query_id
+
+    url = 'https://www.therealreal.com/cart/items'
+    form_data = {
+        'id': good_id,
+        '_analytics_session_id': session_id,
+        'return_product_id': '',
+        'protection_product_id': '',
+        'query_id': query_id
+    }
+
+    # 发送POST请求
+    response = requests.post(url, data=form_data,headers=headers,cookies=cookie_dict)
+    if response.status_code == 200:
+        print("添加成功")
+
+    elif response.status_code == 403:
+        print("遇到人机验证")
+    print(response.status_code)
+
+
+def is_login(page: Chromium)->None|bool:
+    """判断是否已经登录
+    None:判断失败
+    True:已经登录
+    False:未登录
+    """
+    start_time = time.time()
+    first_ele = "@class=js-header-first-look" #已经登录
+    second_ele = "@class=head-utility-row__sign-up js-sign-up-link underlined-link" # 未登录
+    status,idex_ele = fast_find_ele(page,first_ele,second_ele)
+    print(f"判断登录用时：{time.time()-start_time}秒")
+    if status is False:
+        print("两个元素都未找到")
+        return idex_ele # 这里返回的是空，表示未找到
+    
+    if idex_ele == "first":
+        print("已经登录")
+        return True
+    else:
+        print("未登录")
+        return False
+
+
+
+
+
+def fast_find_ele(page: Chromium,first_ele: str,second_ele: str,timeout: float = 200.0,interval: float = 0.1) -> Tuple[bool, Literal["first", "second"] | None] :
+    """
+    快速循环检测两个元素，返回最先找到的元素
+    
+    Args:
+        page: Chromium页面对象
+        first_ele: 第一个元素表达式，如 't:a@@text()=Member Sign In'
+        second_ele: 第二个元素表达式，如 't:input@@id=user_email'
+        timeout: 超时时间(秒)，默认20秒
+        interval: 检查间隔(秒)，默认0.1秒
+    
+    Returns:
+        str: 返回找到的元素表达式
+        False: 超时未找到任何元素
+    """
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        # 检查第一个元素
+        if page.ele(first_ele, timeout=0):
+            return True,"first"
+        
+        # 检查第二个元素
+        if page.ele(second_ele, timeout=0):
+            return True,"second"
+        
+        time.sleep(interval)
+    
+    return False,None  # 超时未找到任何元素
+
+def test_account():
+    """测试过验证"""
+    co1 = ChromiumOptions().set_local_port(9226).set_user_data_path('data1')
+    page = Chromium(co1).latest_tab
+    account_eles = page.eles("t:p@@text()=CLICK AND HOLD")[0]
+    # page.actions.hold(account_eles)
+    print(account_eles)
+    
+    
+
+def open_url_in_tab(page, url):
+    """在新标签页中打开URL"""
+    global_url_set = gv.get_global_var('global_url_set')
+    try:
+        tab = page.new_tab(url)
+        print(f'成功打开 URL: {tab}')
+        # 可以在这里添加页面操作代码
+    except Exception as e:
+        print(f'打开 {url} 失败: {e}')
+
+
+    while True:
+        """循环刷新和获取页面商品链接"""
+        try:
+            _,link_list = get_shop_urls(page) # 得到页面中的商品链接
+            url_set = set(link_list)
+            add_url_set = find_difference(url_set,global_url_set) # 找出新增的url
+            if add_url_set:
+                """获取商品详细信息，并进行加购,这里需要进行多线程处理，需要创建等于add_url_set长度的线程池，然后进行批量处理"""
+                return
+            time.sleep(0.5) # 这里是页面刷新时间，后期可以通过UI界面进行配置，或者全局变量进行配置
+            tab.refresh()
+        except Exception as e:
+            print(f'添加 URL: {url} 到全局变量失败: {e}')
+
+def open_urls_concurrently(page, urls: list):
+    """并发打开多个URL"""
+    threads = []
+    for url in urls:
+        t = threading.Thread(target=open_url_in_tab, args=(page, url))
+        t.start()
+        threads.append(t)
+        time.sleep(0.1)  # 稍微延迟一下，避免同时创建太多标签页
+
+
+
+def find_difference(set_a, set_b):
+    """
+    找出在A集合但不在B集合中的元素
+    
+    参数:
+        set_a: 第一个集合(数据较少)
+        set_b: 第二个集合(数据较多)
+        
+    返回:
+        如果A中有元素不在B中，返回这些元素的集合
+        如果A中所有元素都在B中，返回False
+    """
+    difference = set_a - set_b  # 计算差集
+    if difference:
+        return difference
+    else :
+        return False
+    
+def find_url_add_car_ele(page,url):
+    """
+    功能：
+    从链接中获取添加购物车信息
+    
+    参数：
+        url: 链接
+        
+    返回：
+        返回购物车的定位元素信息
+    """
+    url_ele = page.ele(f"@href={url}").parent(2)
+    return url_ele
+
+
+def car_ele_to_add_car_info(base_ele)->dict:
+    """
+    功能：
+    从定位元素中获取添加购物车信息
+    
+    参数：
+        url_ele: 定位元素
+        
+    返回：
+        返回购物车的信息,打包成字典后进行返回
+    """
+    info_str = base_ele.ele("@class=obsess-box product-card__obsess js-obsess-box").attr("data-analytics-attributes")
+    info_dict = json.loads(info_str)
+
+    good_id  = str(info_dict["product_id"])
+    queryID = info_dict["queryID"]
+
+    _analytics_session_id_ele = base_ele.ele("@@class=obsession-container js-obsess-box-container").ele("t:button")
+    session_id = _analytics_session_id_ele.attr("data-analytics-session-id")
+
+    return good_id,queryID,session_id
+
+
+def find_url_add_car_info(page,url):
+    """通过传入URL，获取商品ID，queryID，sessionID"""
+    url_ele = find_url_add_car_ele(page,url)
+    good_id,queryID,session_id = car_ele_to_add_car_info(url_ele) # 获取商品信息
+    return good_id,queryID,session_id
+
+
 if __name__ == '__main__':
-    get_shop_save_csv()
+    # test_account()
+    co1 = ChromiumOptions().set_local_port(9226).set_user_data_path('data1')
+    page = Chromium(co1).latest_tab
+
+    cookie = ger_cookies(page)
+    set_cookies(page,cookie)
+    cookie = ger_cookies(page)
+
+    url = "/products/men/bags/other/chrome-hearts-leather-cross-shoe-q396f"
+    css_ele  = "product-card__see-similar-items js-track-click-event"
+    
+    good_id,queryID,session_id = find_url_add_car_info(page,url)
+    add_shop_car(good_id,queryID,session_id,cookie)
+
 
 
 

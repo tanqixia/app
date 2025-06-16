@@ -5,7 +5,9 @@ import base.global_var as gv
 from base.gui_method import login_and_register,set_ke_yong
 import ast
 from base.ConfigManagerINI import ConfigManager
+from main_method import start_get_shop_save_csv
 config = ConfigManager()
+
 
 
 def main_gui():
@@ -16,7 +18,7 @@ def main_gui():
                     alpha=1
                     )
     
-    root.iconbitmap('src/DevHome.ico')
+    root.iconbitmap('base_log/src/DevHome.ico')
     root.place_window_center()
     
     notebook = ttk.Notebook(root)
@@ -45,12 +47,14 @@ def main_gui():
 # endregion
     
     # 以下为设置界面
-    zhuanjia_munber_frame = ttk.LabelFrame(tab1,text="基础设置",style=WARNING)
-    zhuanjia_munber_frame.grid(row=1, column=0, sticky=N)
-    
-    choice_model_label = ttk.Label(zhuanjia_munber_frame, text="模式选择：", font=("楷体", 12, "bold"))
+    confei_frame = ttk.LabelFrame(tab1,text="基础设置",style=WARNING)
+    confei_frame.grid(row=1, column=0, sticky=N)
+
+    choice_model_label = ttk.Label(confei_frame, text="预登记商品：", font=("楷体", 12, "bold"))
     choice_model_label.grid(row=0, column=0, padx=10, pady=3, sticky=W)
 
+    start_button = ttk.Button(confei_frame, text="开始采集商品", command=lambda: start_get_shop_save_csv())
+    start_button.grid(row=0, column=1, padx=10, pady=3, sticky=W)
     
     
     

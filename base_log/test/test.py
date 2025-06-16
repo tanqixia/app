@@ -43,65 +43,101 @@ headers = {
 
 cookie_dict = parse_cookie_string(cookie)
 
+def find_difference(set_a, set_b):
+    """
+    找出在A集合但不在B集合中的元素
+    
+    参数:
+        set_a: 第一个集合(数据较少)
+        set_b: 第二个集合(数据较多)
+        
+    返回:
+        如果A中有元素不在B中，返回这些元素的集合
+        如果A中所有元素都在B中，返回False
+    """
+    difference = set_a - set_b  # 计算差集
+    if difference:
+        return difference
+    else :
+        return False
+
+def test_redirects():
+    """测试重定向"""
+    from DrissionPage import SessionPage
+
+    page = SessionPage()
+    page.get('http://g1879.gitee.io/drissionpage')
 
 
 
 
 if __name__ == '__main__':
+# 示例1: A中有元素不在B中
+    A = {1, 2, 3, 4}
+    B = {3, 4, 5, 6, 7, 8}
+    result = find_difference(A, B)
+    print(result)  # 输出: {1, 2}
 
-    bags = "bags"
-    co1 = ChromiumOptions().set_local_port(9222)
-    page = Chromium(co1).latest_tab
-    # 这里可能会出现验证
-    page.set.cookies(cookie)
-    open_url_get_shop_url(page,bags)
+    # 示例2: A中所有元素都在B中
+    A = {3, 4}
+    B = {1, 2, 3, 4, 5, 6}
+    result = find_difference(A, B)
+    print(result)  # 输出: False
 
-    # shop_list,link_list = get_shop_urls(page)
 
-    # # 将数据写入CSV文件
-    # write_lists_to_csv(urls = link_list,names = shop_list,)
-    # # 读取CSV文件中连接列，并且返回集合，这里在多进程运行的时候也是这样读取的
+    # bags = "bags"
+    # co1 = ChromiumOptions().set_local_port(9222)
+    # page = Chromium(co1).latest_tab
+    # # 这里可能会出现验证
+    # page.set.cookies(cookie)
+    # open_url_get_shop_url(page,bags)
 
-    # # 以上为商品链接保存完毕，接下来的任务是需要再多进程中运行
+    # # shop_list,link_list = get_shop_urls(page)
+
+    # # # 将数据写入CSV文件
+    # # write_lists_to_csv(urls = link_list,names = shop_list,)
+    # # # 读取CSV文件中连接列，并且返回集合，这里在多进程运行的时候也是这样读取的
+
+    # # # 以上为商品链接保存完毕，接下来的任务是需要再多进程中运行
     
-    # url_set = read_urls_from_csv()
-    # 如果新探索到的链接不在集合中，则返回链接，后期通过代码进行加购，但是有可能需要返回商品ID，所以后期再保存或者获取的时候，需要得到商品ID
+    # # url_set = read_urls_from_csv()
+    # # 如果新探索到的链接不在集合中，则返回链接，后期通过代码进行加购，但是有可能需要返回商品ID，所以后期再保存或者获取的时候，需要得到商品ID
     
 
 
-    # 请求的网址是：https://www.therealreal.com/cart/items
-    # ID = data-product-id，属性，_analytics_session_i=data-analytics-session-id属性，另外两个参数可以为空，其中query_id在data-analytics-attributes列表中的query_ID
-    # 表单数据是：id=41953892&_analytics_session_id=1749787048157&return_product_id=&protection_product_id=&query_id=e17b491e5aa8a9015b1e2925d61f6ea8
+    # # 请求的网址是：https://www.therealreal.com/cart/items
+    # # ID = data-product-id，属性，_analytics_session_i=data-analytics-session-id属性，另外两个参数可以为空，其中query_id在data-analytics-attributes列表中的query_ID
+    # # 表单数据是：id=41953892&_analytics_session_id=1749787048157&return_product_id=&protection_product_id=&query_id=e17b491e5aa8a9015b1e2925d61f6ea8
 
-    shop_list = page.ele("@@class=product-grid")
-    # shop_list_ele = shop_list.eles('@@class=product-card__description product-card__link js-product-card-link') # 可以获取商品名称和连接，也就是.text和.link
+    # shop_list = page.ele("@@class=product-grid")
+    # # shop_list_ele = shop_list.eles('@@class=product-card__description product-card__link js-product-card-link') # 可以获取商品名称和连接，也就是.text和.link
 
-    id_list_eles = shop_list.eles('@@class=product-card-wrapper js-product-card-wrapper')
-    start_time = time.time()
-    id_list = []
-    session_id_list = []
-    query_id_list = []
-    for i_ele in id_list_eles:
+    # id_list_eles = shop_list.eles('@@class=product-card-wrapper js-product-card-wrapper')
+    # start_time = time.time()
+    # id_list = []
+    # session_id_list = []
+    # query_id_list = []
+    # for i_ele in id_list_eles:
 
-        # print(f"i是{i}")
-        base_ele = i_ele.ele("@@class=product-card js-plp-product-card ") # 可以获取id，也就是.attr("id")
-        # 获得ID属性
-        id  = base_ele.attr("data-product-id")
-        id_list.append(id)
-        # print(f"id是{id}")
-        # 获得_analytics_session_id属性
-        _analytics_session_id_ele = base_ele.ele("@@class=obsession-container js-obsess-box-container").ele("t:button")
-        _analytics_session_id = _analytics_session_id_ele.attr("data-analytics-session-id")
-        # print(f"_analytics_session_id的值是{_analytics_session_id}")
-        session_id_list.append(_analytics_session_id)
-        # 获得query_id
-        dict_str = _analytics_session_id_ele.attr("data-analytics-attributes")
-        query_id = json.loads(dict_str)["queryID"]
-        print(f"query_id的值是{query_id},类型是{type(query_id)}")
-        query_id_list.append(query_id)
+    #     # print(f"i是{i}")
+    #     base_ele = i_ele.ele("@@class=product-card js-plp-product-card ") # 可以获取id，也就是.attr("id")
+    #     # 获得ID属性
+    #     id  = base_ele.attr("data-product-id")
+    #     id_list.append(id)
+    #     # print(f"id是{id}")
+    #     # 获得_analytics_session_id属性
+    #     _analytics_session_id_ele = base_ele.ele("@@class=obsession-container js-obsess-box-container").ele("t:button")
+    #     _analytics_session_id = _analytics_session_id_ele.attr("data-analytics-session-id")
+    #     # print(f"_analytics_session_id的值是{_analytics_session_id}")
+    #     session_id_list.append(_analytics_session_id)
+    #     # 获得query_id
+    #     dict_str = _analytics_session_id_ele.attr("data-analytics-attributes")
+    #     query_id = json.loads(dict_str)["queryID"]
+    #     print(f"query_id的值是{query_id},类型是{type(query_id)}")
+    #     query_id_list.append(query_id)
 
 
-    print(f"耗时是{time.time()-start_time}")
+    # print(f"耗时是{time.time()-start_time}")
 
 
 
@@ -137,3 +173,5 @@ if __name__ == '__main__':
     #     # i = shop.ele('@@class=product-card__status-label js-product-card__status-label')
     #     # print(f"得到的数据是{shop.text()}")
     #     print(shop.text)
+
+

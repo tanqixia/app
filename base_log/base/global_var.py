@@ -5,6 +5,8 @@ CONFIG_FILE = 'base/config.ini'
 version = "1.0.25.4.17"
 
 user_cookies = {}
+
+global_url_set = set()# 全局变量中存储所有链接
 # https://www.therealreal.com/
 # 账号：vintedfr1@163.com
 # 密码：Chen1122@
@@ -12,7 +14,14 @@ user_cookies = {}
 # 品牌名是 = chrome hearts
 # 类目是 = [bags,betls,jewelry]
 
+# css_ele  = "product-card__see-similar-items js-track-click-event" 这个元素为获取可售卖的商品
+
 tip_widget = None # 主界面用于显示通知的控件
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+    "referer":"https://www.therealreal.com/"
+    }
 
 
 
