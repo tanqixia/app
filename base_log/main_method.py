@@ -221,7 +221,7 @@ def start_get_shop_save_csv():
     t.start()
     
 def add_shop_car(good_id:str,session_id:str,query_id:str,cookie_dict:dict,x_csrf_token):
-    """将商品加入购物车"""
+    """通过发送POST请求将商品加入购物车"""
     if not good_id:
         raise ValueError("good_id不能为空")
     if not session_id:
@@ -242,15 +242,35 @@ def add_shop_car(good_id:str,session_id:str,query_id:str,cookie_dict:dict,x_csrf
         'protection_product_id': '',
         # 'query_id': query_id
     }
-
+  
     # 发送POST请求
+    start = time.time()
     response = requests.post(url, data=form_data,headers=headers,cookies=cookie_dict)
+    print(f"等待服务器加购响应用时：{time.time()-start}")
     if response.status_code == 200:
         print("添加成功")
 
     elif response.status_code == 403:
         print("遇到人机验证")
     print(response.status_code)
+
+
+def open_url_add_car(page:Chromium,url:str):
+    """通过传入URL进行添加购物车"""
+    page = page.new_tab(url)
+    start = time.time()
+    add_car = page.wait.eles_loaded("@@class=button button--primary js-pdp-add-to-cart-button",any_one=True)
+    print(f"等待按钮出现用时：{time.time()-start}")
+    return 
+    if add_car:
+        start = time.time()
+        page.ele("@@class=button button--primary js-pdp-add-to-cart-button").click()
+        print("添加成功")
+        print(f"点击成功用时：{time.time()-start}")
+    # add_car.click()
+
+
+
 
 
 def is_login(page: Chromium)->None|bool:
@@ -427,21 +447,43 @@ def find_url_add_car_info(page,url):
 if __name__ == '__main__':
     # test_account()
     co1 = ChromiumOptions().set_local_port(9226).set_user_data_path('data1')
-    page = Chromium(co1).latest_tab
-    page.get("https://www.therealreal.com/products?keywords=chrome%20hearts%20bags")
-    cookie = ger_cookies(page)
-    set_cookies(page,cookie)
-    cookie = ger_cookies(page)
+    page = Chromium(co1)
 
     url = "/products/men/bags/weekenders/chrome-hearts-leather-big-fleur-q38zg"
-    css_ele  = "product-card__see-similar-items js-track-click-event"
+
+
+    open_url = "https://www.therealreal.com"+url
+    open_url_add_car(page,open_url)
+
     
-    good_id,queryID,session_id = find_url_add_car_info(page,url)
-    # 获取当前页面的响应对象
-    x_csrf_token = page.ele("t:meta@@name=csrf-token").attr("content")
-    print(f"x_csrf_token的值是{x_csrf_token}")
-    print(f"得到的加购信息是good_id：{good_id}，queryID：{queryID}，session_id:{session_id}")
-    add_shop_car(good_id,queryID,session_id,cookie,x_csrf_token)
+
+
+
+
+
+  
+    # # page.get("https://www.therealreal.com/products?keywords=chrome%20hearts%20bags")
+    # cookie = ger_cookies(page)
+    # set_cookies(page,cookie)
+    # cookie = ger_cookies(page)
+
+    
+    # css_ele  = "product-card__see-similar-items js-track-click-event"
+    
+
+
+    # start = time.time()
+    # good_id,queryID,session_id = find_url_add_car_info(page,url)
+    # print(f"得到商品信息用时{time.time()-start}秒")
+    # # 获取当前页面的响应对象
+    # start = time.time()
+    # x_csrf_token = page.ele("t:meta@@name=csrf-token").attr("content")
+    # print(f"获取token用时{time.time()-start}")
+    # # print(f"x_csrf_token的值是{x_csrf_token}")
+    # # print(f"得到的加购信息是good_id：{good_id}，queryID：{queryID}，session_id:{session_id}")
+    # start = time.time()
+    # add_shop_car(good_id,queryID,session_id,cookie,x_csrf_token)
+    # print(f"添加购物车用时：{time.time()-start}")
 
 
 

@@ -70,20 +70,67 @@ def test_redirects():
 
 
 
+def test_url_open_wait():
+    """测试url打开等待"""
+    co1 = ChromiumOptions().set_local_port(9226).set_user_data_path('data1')
+    page = Chromium(co1).latest_tab
+    page.set.load_mode.none() # 忽略加载
+    start = time.time()
+    page.get('https://www.therealreal.com/products/men/bags/weekenders/chrome-hearts-leather-big-fleur-q38zg')
+    print(f"打开网页用时：{time.time()-start:.10f}")
+
+    start = time.time()
+    add_car = page.wait.eles_loaded("@@class=button button--primary js-pdp-add-to-cart-button",any_one=False)
+    print(f"等待按钮出现用时：{time.time()-start}")
+    print(add_car)
+    return
+
+    
+    start = time.time()
+    print(f"开始查找指定元素")
+    add_car = page.ele("@@class=button button--primary js-pdp-add-to-cart-button")
+    page.stop_loading()  # 主动停止加载
+    print(add_car)
+    print(f"等待按钮出现用时：{time.time()-start:.10f}")
+
+
+def _test_open_url():
+    #!/usr/bin/env python
+    # -*- coding:utf-8 -*-
+    #-导入库
+    from DrissionPage import Chromium, ChromiumOptions
+    # 创建配置对象
+    co = ChromiumOptions().set_local_port(9226).set_user_data_path('data1')
+
+    # 创建浏览器对象
+    browser = Chromium(co)
+    tab = browser.latest_tab
+    tab.set.load_mode.none()
+
+    #访问网页..
+    start_time = time.time()
+    url="https://www.therealreal.com/products/men/bags/weekenders/chrome-hearts-leather-big-fleur-q38zg"
+    tab.get(url)
+    print(f"打开页面用时{time.time()-start_time}秒")
+    start_time = time.time()
+    time.sleep(5)
+    tab.stop_loading()
+    tab.ele("@@class=button button--primary js-pdp-add-to-cart-button")
+    print(f"等待按钮出现用时：{time.time()-start_time}秒")
+    
+    return
+    tab.ele('xpath://button[contains(@class, "button button--primary js-pdp-add-to-cart-button")]').click()
+    tab.ele('xpath:/html[1]/body[1]/div[8]/div[1]/div[1]/div[2]/form[1]/div[1]/div[1]/div[2]/div[1]/input[1]').input('1321313@qq.com')
+
+    input("Press any key to continue...")
+
+
+
 
 if __name__ == '__main__':
 # 示例1: A中有元素不在B中
-    A = {1, 2, 3, 4}
-    B = {3, 4, 5, 6, 7, 8}
-    result = find_difference(A, B)
-    print(result)  # 输出: {1, 2}
-
-    # 示例2: A中所有元素都在B中
-    A = {3, 4}
-    B = {1, 2, 3, 4, 5, 6}
-    result = find_difference(A, B)
-    print(result)  # 输出: False
-
+    test_url_open_wait()
+    # _test_open_url()
 
     # bags = "bags"
     # co1 = ChromiumOptions().set_local_port(9222)
