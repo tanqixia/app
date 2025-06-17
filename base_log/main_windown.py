@@ -5,7 +5,7 @@ import base.global_var as gv
 from base.gui_method import login_and_register,set_ke_yong
 import ast
 from base.ConfigManagerINI import ConfigManager
-from main_method import start_get_shop_save_csv
+from main_method import start_get_shop_save_csv,start_listen_shop
 config = ConfigManager()
 
 
@@ -57,6 +57,8 @@ def main_gui():
     start_button.grid(row=0, column=1, padx=10, pady=3, sticky=W)
     
     
+    start_listen_button = ttk.Button(confei_frame, text="开始监听商品", command=lambda: start_listen_shop())
+    start_listen_button.grid(row=0, column=2, padx=10, pady=3, sticky=W)
     
     
     message_frame = ttk.LabelFrame(tab1,text="通知栏",style=WARNING)

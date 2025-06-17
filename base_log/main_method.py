@@ -9,6 +9,7 @@ import base.global_var as gv
 import threading
 from typing import Optional, Union,Tuple, Literal
 import json
+from pathlib import Path
 
 
 
@@ -99,25 +100,42 @@ def read_urls_from_csv(filename='link_data.csv'):
 
 def open_url_get_shop_url(page:Chromium,url_class: str,page_num = None) -> list:
     """打开指定商品类目的URL链接"""
+    start_time = time.time()
+    page.set.load_mode.eager
     if page_num is  None:
         url = "https://www.therealreal.com/products?keywords=chrome%20hearts%20"+url_class
     else:
         url = "https://www.therealreal.com/products?keywords=chrome%20hearts%20"+url_class+"&page="+str(page_num)
     page.get(url)
+    print(f"打开链接耗时: {time.time()-start_time}")
 
-def get_shop_urls(page:Chromium): # 后期可以改成直接传入页面ID，通过页面ID去获取，这样可以同时获取多个页面的链接
-    """获取页面中的商品链接，记得先要打开商品类目页面，也就是open_url_get_shop_url函数"""
+def get_shop_urls(page:Chromium,card:str): # 后期可以改成直接传入页面ID，通过页面ID去获取，这样可以同时获取多个页面的链接
+    """获取页面中的商品链接，记得先要打开商品类目页面，也就是open_url_get_shop_url函数
+    :param page: Chromium对象
+    :param card: all | salable 获取商品链接的方式，all表示获取所有商品链接，salable：表示获取可售卖的商品链接
+    ps:salable关键字暂时弃用，因为需要重写获取商品链接的逻辑，所以暂时实现所有商品的获取方式
+    """
     # TODO 网页是静态的，后期可以考虑直接用requests获取
-    shop_list_ele = page.ele("@@class=product-grid").eles('@@class=product-card__description product-card__link js-product-card-link')
+    start_time = time.time()
+    if card == "all":
+        shop_list_ele = page.ele("@@class=product-grid").eles('@@class=product-card__description product-card__link js-product-card-link') # 获取所有商品链接
+        print("获取商品链接耗时：", time.time() - start_time)
+    elif card == "salable":
+        print("后期按需实现")
+        raise "暂未实现salable方式的获取商品链接，后期可能会实现"
+        shop_list_ele = page.ele("@@class=product-grid").eles('@@class=product-card__see-similar-items js-track-click-event') # 获取克售卖的商品链接
+
     # TODO:这里可能涉及到多个网页的处理，后期修改代码
     print(f"列表有{len(shop_list_ele)}个商品")
     shop_list = []
     link_list = []
+    start_time = time.time()
     for shop in shop_list_ele:
         # i = shop.ele('@@class=product-card__status-label js-product-card__status-label')
         # print(f"得到的数据是{shop.text()}")
         shop_list.append(shop.text)
         link_list.append(shop.link)
+    print(f"解析商品耗时{time.time()-start_time}秒")
     return shop_list,link_list
 
     
@@ -201,17 +219,22 @@ def get_shop_save_csv():
     set_cookies(page,cookies_dict)
     # 打开商品搜索页面
     shop_list = ["betls","bags","jewelry"]
+
+    if Path('link_data.csv').exists():
+        print("📁 清理旧文件")
+        Path('link_data.csv').unlink()
+
     for shop_class in shop_list:
         # 遍历每个页面
         open_url_get_shop_url(page,shop_class)
-        shop_list,link_list = get_shop_urls(page)
-        write_lists_to_csv(urls = link_list,names = shop_list,model="w")
+        shop_list,link_list = get_shop_urls(page,"all")
+        write_lists_to_csv(urls = link_list,names = shop_list)
         page_list = get_page_cont(page) # 得到页码列表
         # 如果分页大于1，则循环遍历其他页面，进行保存数据
         if len(page_list)  > 1:
             for page_num in page_list[1:]:
                 open_url_get_shop_url(page,shop_class,page_num)
-                shop_list,link_list = get_shop_urls(page)
+                shop_list,link_list = get_shop_urls(page,"all")
                 write_lists_to_csv(urls = link_list,names = shop_list)
     print("保存完成")
 
@@ -232,7 +255,7 @@ def add_shop_car(good_id:str,session_id:str,query_id:str,cookie_dict:dict,x_csrf
         raise ValueError("cookie_dict不能为空")
     headers = gv.get_global_var("headers") #  获取请求头
 
-    headers["x-csrf-token"] = x_csrf_token
+    headers["x-csrf-token"] = x_csrf_token # 添加x-csrf-token
 
     url = 'https://www.therealreal.com/cart/items'
     form_data = {
@@ -248,29 +271,56 @@ def add_shop_car(good_id:str,session_id:str,query_id:str,cookie_dict:dict,x_csrf
     response = requests.post(url, data=form_data,headers=headers,cookies=cookie_dict)
     print(f"等待服务器加购响应用时：{time.time()-start}")
     if response.status_code == 200:
-        print("添加成功")
+        print("post请求添加成功")
 
     elif response.status_code == 403:
         print("遇到人机验证")
     print(response.status_code)
 
 
-def open_url_add_car(page:Chromium,url:str):
+def open_url_add_car(page:Chromium,url:str,):
     """通过传入URL进行添加购物车"""
-    page = page.new_tab(url)
-    start = time.time()
-    add_car = page.wait.eles_loaded("@@class=button button--primary js-pdp-add-to-cart-button",any_one=True)
-    print(f"等待按钮出现用时：{time.time()-start}")
-    return 
+    print("正在通过页面交互添加购物车")
+    page.set.load_mode.none() # 忽略加载
+    page_shop_tab = page.new_tab(url)
+    start_time = time.time()
+    add_car = page_shop_tab.wait.eles_loaded("@@class=button button--primary js-pdp-add-to-cart-button",any_one=True)
+    print(f"等待按钮出现用时：{time.time()-start_time}")
     if add_car:
+        print("找到添加购物车按钮")
+        page_shop_tab.stop_loading()
         start = time.time()
-        page.ele("@@class=button button--primary js-pdp-add-to-cart-button").click()
-        print("添加成功")
-        print(f"点击成功用时：{time.time()-start}")
-    # add_car.click()
+        page_shop_tab.ele("@@class=button button--primary js-pdp-add-to-cart-button").click()
+        print(f"URL方式添加购物车点击成功，用时：{time.time()-start}")
+    else:
+        print("没有找到添加购物车按钮")
+    print(f"加入购物车一共用时：{time.time()-start_time}")
 
 
 
+def post_add_car(page: Chromium,url,tab_id)->None:
+    """
+    提交加入购物车
+    """
+    page_tab = page.get_tab(tab_id)
+    cookie = ger_cookies(page_tab)
+    set_cookies(page_tab,cookie)
+    cookie = ger_cookies(page_tab)
+    css_ele  = "product-card__see-similar-items js-track-click-event"
+
+
+    start = time.time()
+    good_id,queryID,session_id = find_url_add_car_info(page_tab,url)
+    print(f"得到商品信息用时{time.time()-start}秒")
+    # 获取当前页面的响应对象
+    start = time.time()
+    x_csrf_token = page_tab.ele("t:meta@@name=csrf-token").attr("content")
+    print(f"获取token用时{time.time()-start}")
+    # print(f"x_csrf_token的值是{x_csrf_token}")
+    # print(f"得到的加购信息是good_id：{good_id}，queryID：{queryID}，session_id:{session_id}")
+    start = time.time()
+    add_shop_car(good_id,queryID,session_id,cookie,x_csrf_token)
+    print(f"添加购物车用时：{time.time()-start}")
 
 
 def is_login(page: Chromium)->None|bool:
@@ -343,34 +393,76 @@ def open_url_in_tab(page, url):
     global_url_set = gv.get_global_var('global_url_set')
     try:
         tab = page.new_tab(url)
-        print(f'成功打开 URL: {tab}')
+        # if tab.status_code == 200:
+        #     print(f'成功打开 URL: {tab}')
+        # elif tab.status_code == 403:
+        #     print(f'遇到人机验证，请手动处理')
         # 可以在这里添加页面操作代码
     except Exception as e:
         print(f'打开 {url} 失败: {e}')
+        raise e
+        return
 
 
     while True:
         """循环刷新和获取页面商品链接"""
         try:
-            _,link_list = get_shop_urls(page) # 得到页面中的商品链接
+            _,link_list = get_shop_urls(tab,"all") # 得到页面中的商品链接
             url_set = set(link_list)
+            print(f'全局变量的集合是 {len(url_set)} 个')
             add_url_set = find_difference(url_set,global_url_set) # 找出新增的url
             if add_url_set:
                 """获取商品详细信息，并进行加购,这里需要进行多线程处理，需要创建等于add_url_set长度的线程池，然后进行批量处理"""
-                return
-            time.sleep(0.5) # 这里是页面刷新时间，后期可以通过UI界面进行配置，或者全局变量进行配置
-            tab.refresh()
+                print(f'新增商品链接数量为: {len(add_url_set)}，连接是{add_url_set}')
+                tab_id = tab.tab_id # 获取当前标签页的id
+                add_url_list = list(add_url_set)
+                start_threads_add_cart(page,add_url_list,tab_id)
+
+
+
+
+
+
+
+                break
+            else:
+                print("没有刷新到新的商品，指定刷新时间，继续等待")
+                time.sleep(0.5) # 这里是页面刷新时间，后期可以通过UI界面进行配置，或者全局变量进行配置
+                tab.refresh()
         except Exception as e:
-            print(f'添加 URL: {url} 到全局变量失败: {e}')
+            print(f'获取商品链接失败 {e}')
 
 def open_urls_concurrently(page, urls: list):
     """并发打开多个URL"""
     threads = []
     for url in urls:
-        t = threading.Thread(target=open_url_in_tab, args=(page, url))
+        t = threading.Thread(target=open_url_in_tab, args=(page, url),daemon=True)
         t.start()
         threads.append(t)
         time.sleep(0.1)  # 稍微延迟一下，避免同时创建太多标签页
+
+
+def start_threads_add_cart(page, urls: list,tab_id:str):
+    """启动多线程进行加购"""
+    for url in urls:
+        t = threading.Thread(target=add_cart_in_two_threads, args=(page, url,tab_id),daemon=True)
+        t.start()
+
+
+def add_cart_in_two_threads(page,url,tab_id):
+    """启动两种加购方式进行商品加购"""
+
+
+    # post_pram_url = url.replace("https://www.therealreal.com", "") # POST提交的时候，URL需要进行截取，不包含主页的URL
+    # post_thread = threading.Thread(target=post_add_car, args=(page,post_pram_url,tab_id),daemon=True)
+    # post_thread.start()
+
+    tab_thread = threading.Thread(target=open_url_add_car, args=(page, url),daemon=True)
+    tab_thread.start()
+
+
+
+
 
 
 
@@ -443,47 +535,51 @@ def find_url_add_car_info(page,url):
     good_id,queryID,session_id = car_ele_to_add_car_info(url_ele) # 获取商品信息
     return good_id,queryID,session_id
 
+def get_url_set():
+    """获取所有URL的集合"""
+    url_set = read_urls_from_csv()
+    gv.set_global_var('global_url_set',url_set)
+    # print("全局变量中存储的URL集合：",gv.get_global_var('global_url_set'))
 
-if __name__ == '__main__':
-    # test_account()
+
+def start_listen_shop():
+    """开始监听商品"""
+    print("开始监听商品")
+
+    # TODO 后期这里开始启用多进程方案进行商品监听
+    get_url_set()
     co1 = ChromiumOptions().set_local_port(9226).set_user_data_path('data1')
     page = Chromium(co1)
+    url_list = gv.get_global_var('shop_class')
+    class_url_base = gv.get_global_var('class_base_url')
+    url_list = [class_url_base + url for url in url_list]
 
-    url = "/products/men/bags/weekenders/chrome-hearts-leather-big-fleur-q38zg"
+    open_urls_concurrently(page,url_list)
 
 
-    open_url = "https://www.therealreal.com"+url
-    open_url_add_car(page,open_url)
+
+
+if __name__ == '__main__':
+
+    start_listen_shop()
+    # test_account()
+    # co1 = ChromiumOptions().set_local_port(9226).set_user_data_path('data1')
+    # page = Chromium(co1)
+
+
+
+
+    # url = "/products/men/bags/weekenders/chrome-hearts-leather-big-fleur-q38zg"
+
+
+    # open_url = "https://www.therealreal.com"+url
+    # open_url_add_car(page,open_url)
 
     
-
-
-
-
-
   
     # # page.get("https://www.therealreal.com/products?keywords=chrome%20hearts%20bags")
-    # cookie = ger_cookies(page)
-    # set_cookies(page,cookie)
-    # cookie = ger_cookies(page)
-
-    
-    # css_ele  = "product-card__see-similar-items js-track-click-event"
-    
 
 
-    # start = time.time()
-    # good_id,queryID,session_id = find_url_add_car_info(page,url)
-    # print(f"得到商品信息用时{time.time()-start}秒")
-    # # 获取当前页面的响应对象
-    # start = time.time()
-    # x_csrf_token = page.ele("t:meta@@name=csrf-token").attr("content")
-    # print(f"获取token用时{time.time()-start}")
-    # # print(f"x_csrf_token的值是{x_csrf_token}")
-    # # print(f"得到的加购信息是good_id：{good_id}，queryID：{queryID}，session_id:{session_id}")
-    # start = time.time()
-    # add_shop_car(good_id,queryID,session_id,cookie,x_csrf_token)
-    # print(f"添加购物车用时：{time.time()-start}")
 
 
 

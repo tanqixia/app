@@ -1,5 +1,6 @@
 import threading
 import time
+import requests
 def fetch_data(page, url, results, idx):
     """每个标签中获取数据后保存到results中。"""
     try:
@@ -30,23 +31,16 @@ def fetch_all(page, urls):
 
 
 
+def test_quests():
+    url = "https://www.therealreal.com/products?keywords=chrome%20hearts%20bags"
+    headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+    "referer":"https://www.therealreal.com/",
+    }
+    request = requests.get(url,headers=headers)
+    print(request.status_code)
+
+
 
 if __name__ == '__main__':
-    co = ChromiumOptions().set_local_port(9226).set_user_data_path('data1')
-    page = ChromiumPage(co)
-
-    url_list = [
-        "http://www.baidu.com",
-        "http://www.taobao.com",
-        "http://www.jd.com",
-        "http://www.qq.com",
-        "http://www.sina.com.cn"
-    ]
-
-    results = fetch_all(page, url_list)
-    print("获取到的数据为:")
-    for url, data in zip(url_list, results):
-        print(url, "->", data)
-
-    input("按回车退出")
-    page.quit()
+    test_quests()

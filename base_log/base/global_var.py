@@ -7,12 +7,18 @@ version = "1.0.25.4.17"
 user_cookies = {}
 
 global_url_set = set()# 全局变量中存储所有链接
+
+class_base_url = "https://www.therealreal.com/products?keywords=chrome%20hearts%20"
 # https://www.therealreal.com/
 # 账号：vintedfr1@163.com
 # 密码：Chen1122@
 
 # 品牌名是 = chrome hearts
-# 类目是 = [bags,betls,jewelry]
+shop_class = ["bags","betls","jewelry"]
+
+
+# 测试加购的商品
+# Chrome Hearts Double Floral Cross Ring,https://www.therealreal.com/products/jewelry/rings/band/chrome-hearts-double-floral-cross-ring-q5u2t
 
 # css_ele  = "product-card__see-similar-items js-track-click-event" 这个元素为获取可售卖的商品
 
