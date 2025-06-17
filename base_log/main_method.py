@@ -119,7 +119,7 @@ def get_shop_urls(page:Chromium,card:str): # 后期可以改成直接传入页�
     start_time = time.time()
     if card == "all":
         shop_list_ele = page.ele("@@class=product-grid").eles('@@class=product-card__description product-card__link js-product-card-link') # 获取所有商品链接
-        log_to_text("获取商品链接耗时：", time.time() - start_time)
+        log_to_text(f"获取商品链接耗时："{time.time() - start_time})
     elif card == "salable":
         log_to_text("后期按需实现")
         raise "暂未实现salable方式的获取商品链接，后期可能会实现"
