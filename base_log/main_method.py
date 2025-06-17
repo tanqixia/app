@@ -10,7 +10,7 @@ import threading
 from typing import Optional, Union,Tuple, Literal
 import json
 from pathlib import Path
-
+from base.logger_service import log_to_text
 
 
 Settings.set_language('zh_cn')  # 设置为中文时，填入'zh_cn'
@@ -91,7 +91,7 @@ def read_urls_from_csv(filename='link_data.csv'):
                     urls.add(url)
                     
     except FileNotFoundError:
-        print(f"警告: 文件 {filename} 不存在")
+        log_to_text(f"警告: 文件 {filename} 不存在")
         return set()
     
     return urls
@@ -107,7 +107,7 @@ def open_url_get_shop_url(page:Chromium,url_class: str,page_num = None) -> list:
     else:
         url = "https://www.therealreal.com/products?keywords=chrome%20hearts%20"+url_class+"&page="+str(page_num)
     page.get(url)
-    print(f"打开链接耗时: {time.time()-start_time}")
+    log_to_text(f"打开链接耗时: {time.time()-start_time}")
 
 def get_shop_urls(page:Chromium,card:str): # 后期可以改成直接传入页面ID，通过页面ID去获取，这样可以同时获取多个页面的链接
     """获取页面中的商品链接，记得先要打开商品类目页面，也就是open_url_get_shop_url函数
@@ -119,23 +119,23 @@ def get_shop_urls(page:Chromium,card:str): # 后期可以改成直接传入页�
     start_time = time.time()
     if card == "all":
         shop_list_ele = page.ele("@@class=product-grid").eles('@@class=product-card__description product-card__link js-product-card-link') # 获取所有商品链接
-        print("获取商品链接耗时：", time.time() - start_time)
+        log_to_text("获取商品链接耗时：", time.time() - start_time)
     elif card == "salable":
-        print("后期按需实现")
+        log_to_text("后期按需实现")
         raise "暂未实现salable方式的获取商品链接，后期可能会实现"
         shop_list_ele = page.ele("@@class=product-grid").eles('@@class=product-card__see-similar-items js-track-click-event') # 获取克售卖的商品链接
 
     # TODO:这里可能涉及到多个网页的处理，后期修改代码
-    print(f"列表有{len(shop_list_ele)}个商品")
+    log_to_text(f"列表有{len(shop_list_ele)}个商品")
     shop_list = []
     link_list = []
     start_time = time.time()
     for shop in shop_list_ele:
         # i = shop.ele('@@class=product-card__status-label js-product-card__status-label')
-        # print(f"得到的数据是{shop.text()}")
+        # log_to_text(f"得到的数据是{shop.text()}")
         shop_list.append(shop.text)
         link_list.append(shop.link)
-    print(f"解析商品耗时{time.time()-start_time}秒")
+    log_to_text(f"解析商品耗时{time.time()-start_time}秒")
     return shop_list,link_list
 
     
@@ -171,16 +171,16 @@ def login(page,username: str, password: str) -> str:
     second_ele = "@@class=info-link underlined-link js-track-click-event@@tabindex=0@@text()=Member Sign Up" #注册
     status,idex_ele = fast_find_ele(page,first_ele,second_ele)
     if status is False:
-        print("两个元素都未找到")
+        log_to_text("两个元素都未找到")
         return idex_ele # 这里返回的是空，表示未找到
     
     if idex_ele == "first":
         # 找到登录元素，点击进行登录
-        print("找到登录元素，进行点击切换到登录页面")
+        log_to_text("找到登录元素，进行点击切换到登录页面")
         page.eles("t:a@@text()=Member Sign In")[1].click()
     else:
         # 找到注册元素，直接进行登录
-        print("找到注册元素，直接进行登录")
+        log_to_text("找到注册元素，直接进行登录")
 
     page.listen.start('https://www.therealreal.com/sessions')
     # 输入用户名
@@ -194,12 +194,12 @@ def login(page,username: str, password: str) -> str:
     # page.wait_for_load_complete()
     res = page.listen.wait()
 
-    print(f"登录用时：{time.time()-start_time}秒")
+    log_to_text(f"登录用时：{time.time()-start_time}秒")
 
 
 def get_page_cont(page: Chromium):
     page_cont = page.ele("t:nav@@class=plp-header-controls__pagination ").text
-    # print(f"得到的长度是：{page_cont.split("\n")}")
+    # log_to_text(f"得到的长度是：{page_cont.split("\n")}")
     return page_cont.split("\n")
 
 def get_shop_save_csv():
@@ -209,8 +209,8 @@ def get_shop_save_csv():
 
     log_status = is_login(page) 
     if log_status is False:
-        username = "vintedfr1@163.com"
-        password = "Chen1122@"
+        username = "r173226793@gmail.com"
+        password = "Richie123.."
         # 登录
         login(page,username,password)
         # 获取网站COOKIE
@@ -221,7 +221,7 @@ def get_shop_save_csv():
     shop_list = ["betls","bags","jewelry"]
 
     if Path('link_data.csv').exists():
-        print("📁 清理旧文件")
+        log_to_text("📁 清理旧文件")
         Path('link_data.csv').unlink()
 
     for shop_class in shop_list:
@@ -236,7 +236,7 @@ def get_shop_save_csv():
                 open_url_get_shop_url(page,shop_class,page_num)
                 shop_list,link_list = get_shop_urls(page,"all")
                 write_lists_to_csv(urls = link_list,names = shop_list)
-    print("保存完成")
+    log_to_text("保存完成")
 
 
 def start_get_shop_save_csv():
@@ -269,32 +269,32 @@ def add_shop_car(good_id:str,session_id:str,query_id:str,cookie_dict:dict,x_csrf
     # 发送POST请求
     start = time.time()
     response = requests.post(url, data=form_data,headers=headers,cookies=cookie_dict)
-    print(f"等待服务器加购响应用时：{time.time()-start}")
+    log_to_text(f"等待服务器加购响应用时：{time.time()-start}")
     if response.status_code == 200:
-        print("post请求添加成功")
+        log_to_text("post请求添加成功")
 
     elif response.status_code == 403:
-        print("遇到人机验证")
-    print(response.status_code)
+        log_to_text("遇到人机验证")
+    log_to_text(response.status_code)
 
 
 def open_url_add_car(page:Chromium,url:str,):
     """通过传入URL进行添加购物车"""
-    print("正在通过页面交互添加购物车")
+    log_to_text("正在通过页面交互添加购物车")
     page.set.load_mode.none() # 忽略加载
     page_shop_tab = page.new_tab(url)
     start_time = time.time()
     add_car = page_shop_tab.wait.eles_loaded("@@class=button button--primary js-pdp-add-to-cart-button",any_one=True)
-    print(f"等待按钮出现用时：{time.time()-start_time}")
+    log_to_text(f"等待按钮出现用时：{time.time()-start_time}")
     if add_car:
-        print("找到添加购物车按钮")
+        log_to_text("找到添加购物车按钮")
         page_shop_tab.stop_loading()
         start = time.time()
         page_shop_tab.ele("@@class=button button--primary js-pdp-add-to-cart-button").click()
-        print(f"URL方式添加购物车点击成功，用时：{time.time()-start}")
+        log_to_text(f"URL方式添加购物车点击成功，用时：{time.time()-start}")
     else:
-        print("没有找到添加购物车按钮")
-    print(f"加入购物车一共用时：{time.time()-start_time}")
+        log_to_text("没有找到添加购物车按钮")
+    log_to_text(f"加入购物车一共用时：{time.time()-start_time}")
 
 
 
@@ -311,16 +311,16 @@ def post_add_car(page: Chromium,url,tab_id)->None:
 
     start = time.time()
     good_id,queryID,session_id = find_url_add_car_info(page_tab,url)
-    print(f"得到商品信息用时{time.time()-start}秒")
+    log_to_text(f"得到商品信息用时{time.time()-start}秒")
     # 获取当前页面的响应对象
     start = time.time()
     x_csrf_token = page_tab.ele("t:meta@@name=csrf-token").attr("content")
-    print(f"获取token用时{time.time()-start}")
-    # print(f"x_csrf_token的值是{x_csrf_token}")
-    # print(f"得到的加购信息是good_id：{good_id}，queryID：{queryID}，session_id:{session_id}")
+    log_to_text(f"获取token用时{time.time()-start}")
+    # log_to_text(f"x_csrf_token的值是{x_csrf_token}")
+    # log_to_text(f"得到的加购信息是good_id：{good_id}，queryID：{queryID}，session_id:{session_id}")
     start = time.time()
     add_shop_car(good_id,queryID,session_id,cookie,x_csrf_token)
-    print(f"添加购物车用时：{time.time()-start}")
+    log_to_text(f"添加购物车用时：{time.time()-start}")
 
 
 def is_login(page: Chromium)->None|bool:
@@ -333,16 +333,16 @@ def is_login(page: Chromium)->None|bool:
     first_ele = "@class=js-header-first-look" #已经登录
     second_ele = "@class=head-utility-row__sign-up js-sign-up-link underlined-link" # 未登录
     status,idex_ele = fast_find_ele(page,first_ele,second_ele)
-    print(f"判断登录用时：{time.time()-start_time}秒")
+    log_to_text(f"判断登录用时：{time.time()-start_time}秒")
     if status is False:
-        print("两个元素都未找到")
+        log_to_text("两个元素都未找到")
         return idex_ele # 这里返回的是空，表示未找到
     
     if idex_ele == "first":
-        print("已经登录")
+        log_to_text("已经登录")
         return True
     else:
-        print("未登录")
+        log_to_text("未登录")
         return False
 
 
@@ -384,7 +384,7 @@ def test_account():
     page = Chromium(co1).latest_tab
     account_eles = page.eles("t:p@@text()=CLICK AND HOLD")[0]
     # page.actions.hold(account_eles)
-    print(account_eles)
+    log_to_text(account_eles)
     
     
 
@@ -394,12 +394,12 @@ def open_url_in_tab(page, url):
     try:
         tab = page.new_tab(url)
         # if tab.status_code == 200:
-        #     print(f'成功打开 URL: {tab}')
+        #     log_to_text(f'成功打开 URL: {tab}')
         # elif tab.status_code == 403:
-        #     print(f'遇到人机验证，请手动处理')
+        #     log_to_text(f'遇到人机验证，请手动处理')
         # 可以在这里添加页面操作代码
     except Exception as e:
-        print(f'打开 {url} 失败: {e}')
+        log_to_text(f'打开 {url} 失败: {e}')
         raise e
         return
 
@@ -409,11 +409,11 @@ def open_url_in_tab(page, url):
         try:
             _,link_list = get_shop_urls(tab,"all") # 得到页面中的商品链接
             url_set = set(link_list)
-            print(f'全局变量的集合是 {len(url_set)} 个')
+            log_to_text(f'全局变量的集合是 {len(url_set)} 个')
             add_url_set = find_difference(url_set,global_url_set) # 找出新增的url
             if add_url_set:
                 """获取商品详细信息，并进行加购,这里需要进行多线程处理，需要创建等于add_url_set长度的线程池，然后进行批量处理"""
-                print(f'新增商品链接数量为: {len(add_url_set)}，连接是{add_url_set}')
+                log_to_text(f'新增商品链接数量为: {len(add_url_set)}，连接是{add_url_set}')
                 tab_id = tab.tab_id # 获取当前标签页的id
                 add_url_list = list(add_url_set)
                 start_threads_add_cart(page,add_url_list,tab_id)
@@ -426,11 +426,11 @@ def open_url_in_tab(page, url):
 
                 break
             else:
-                print("没有刷新到新的商品，指定刷新时间，继续等待")
+                log_to_text("没有刷新到新的商品，指定刷新时间，继续等待")
                 time.sleep(0.5) # 这里是页面刷新时间，后期可以通过UI界面进行配置，或者全局变量进行配置
                 tab.refresh()
         except Exception as e:
-            print(f'获取商品链接失败 {e}')
+            log_to_text(f'获取商品链接失败 {e}')
 
 def open_urls_concurrently(page, urls: list):
     """并发打开多个URL"""
@@ -520,11 +520,11 @@ def car_ele_to_add_car_info(base_ele)->dict:
     session_id = _analytics_session_id_ele.attr("data-analytics-session-id")
 
     if  not session_id:
-        print("session_id为空")
+        log_to_text("session_id为空")
     if not good_id:
-        print("good_id为空")
+        log_to_text("good_id为空")
     if not queryID:
-        print("queryID为空")
+        log_to_text("queryID为空")
 
     return good_id,queryID,session_id
 
@@ -539,12 +539,12 @@ def get_url_set():
     """获取所有URL的集合"""
     url_set = read_urls_from_csv()
     gv.set_global_var('global_url_set',url_set)
-    # print("全局变量中存储的URL集合：",gv.get_global_var('global_url_set'))
+    # log_to_text("全局变量中存储的URL集合：",gv.get_global_var('global_url_set'))
 
 
 def start_listen_shop():
     """开始监听商品"""
-    print("开始监听商品")
+    log_to_text("开始监听商品")
 
     # TODO 后期这里开始启用多进程方案进行商品监听
     get_url_set()
@@ -595,4 +595,4 @@ if __name__ == '__main__':
     # headers = {
     # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36'}
     # url_data = requests.get(url,headers=headers)
-    # print(url_data.text)
+    # log_to_text(url_data.text)

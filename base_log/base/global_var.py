@@ -10,8 +10,8 @@ global_url_set = set()# 全局变量中存储所有链接
 
 class_base_url = "https://www.therealreal.com/products?keywords=chrome%20hearts%20"
 # https://www.therealreal.com/
-# 账号：vintedfr1@163.com
-# 密码：Chen1122@
+# 账号：r173226793@gmail.com
+# 密码：Richie123..
 
 # 品牌名是 = chrome hearts
 shop_class = ["bags","betls","jewelry"]
