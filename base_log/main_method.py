@@ -384,7 +384,7 @@ def test_account():
     page = Chromium(co1).latest_tab
     account_eles = page.eles("t:p@@text()=CLICK AND HOLD")[0]
     # page.actions.hold(account_eles)
-    log_to_text(account_eles)
+    print(account_eles)
     
     
 
@@ -399,7 +399,7 @@ def open_url_in_tab(page, url):
         #     log_to_text(f'遇到人机验证，请手动处理')
         # 可以在这里添加页面操作代码
     except Exception as e:
-        log_to_text(f'打开 {url} 失败: {e}')
+        log_to_text(f'打开 {url} 失败: {str(e)}')
         raise e
         return
 
@@ -418,19 +418,13 @@ def open_url_in_tab(page, url):
                 add_url_list = list(add_url_set)
                 start_threads_add_cart(page,add_url_list,tab_id)
 
-
-
-
-
-
-
                 break
             else:
                 log_to_text("没有刷新到新的商品，指定刷新时间，继续等待")
                 time.sleep(0.5) # 这里是页面刷新时间，后期可以通过UI界面进行配置，或者全局变量进行配置
                 tab.refresh()
         except Exception as e:
-            log_to_text(f'获取商品链接失败 {e}')
+            log_to_text(f'获取商品链接失败 {str(e)}')
 
 def open_urls_concurrently(page, urls: list):
     """并发打开多个URL"""
@@ -595,4 +589,4 @@ if __name__ == '__main__':
     # headers = {
     # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36'}
     # url_data = requests.get(url,headers=headers)
-    # log_to_text(url_data.text)
+    # print(url_data.text)
