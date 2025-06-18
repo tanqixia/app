@@ -153,7 +153,7 @@ def listen_shop_urls(page:Chromium):
     log_to_text(f"监听到的数据是{res}")
     log_to_text(f"监听商品链接耗时{time.time()-startime}秒")
     print(f"总耗时{time.time()-start_time}秒")
-    
+
 
 
 
@@ -426,10 +426,11 @@ def open_url_in_tab(page, url):
 
     while True:
         """循环刷新和获取页面商品链接"""
+        start_time = time.time()
         try:
             _,link_list = get_shop_urls(tab,"all") # 得到页面中的商品链接
             url_set = set(link_list)
-            log_to_text(f'全局变量的集合是 {len(url_set)} 个')
+            log_to_text(f'监控到的商品数量是 {len(url_set)} 个')
             add_url_set = find_difference(url_set,global_url_set) # 找出新增的url
             if add_url_set:
                 """获取商品详细信息，并进行加购,这里需要进行多线程处理，需要创建等于add_url_set长度的线程池，然后进行批量处理"""
@@ -445,6 +446,7 @@ def open_url_in_tab(page, url):
                 tab.refresh()
         except Exception as e:
             log_to_text(f'获取商品链接失败 {str(e)}')
+        log_to_text(f"循环判断一次用时{time.time()-start_time}")
 
 def open_urls_concurrently(page, urls: list):
     """并发打开多个URL"""
@@ -458,9 +460,11 @@ def open_urls_concurrently(page, urls: list):
 
 def start_threads_add_cart(page, urls: list,tab_id:str):
     """启动多线程进行加购"""
+    start_time = time.time()
     for url in urls:
         t = threading.Thread(target=add_cart_in_two_threads, args=(page, url,tab_id),daemon=True)
         t.start()
+    log_to_text(f"启动多线程一共用时{time.time()-start_time}")
 
 
 def add_cart_in_two_threads(page,url,tab_id):
