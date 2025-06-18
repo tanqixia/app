@@ -8,5 +8,5 @@ file_path = os.path.join("./logs", filename)
 
 def log_to_text(text):
     with open(file_path, 'a',encoding='utf-8') as logfile:
-        logfile.write(f"{text}【当前记录时间为：{datetime.now().replace(microsecond=0)}】\n")
+        logfile.write(f"【{datetime.now().replace(microsecond=0)}记录内容为：{text}】\n")
         print(text)

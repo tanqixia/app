@@ -1,3 +1,3 @@
-2025/06/17-20:51:19.205 d02c Reusing MANIFEST E:\code\opener\kitchek\app\data1\Default\Sync Data\LevelDB/MANIFEST-000001
-2025/06/17-20:51:19.216 d02c Recovering log #3
-2025/06/17-20:51:19.216 d02c Reusing old log E:\code\opener\kitchek\app\data1\Default\Sync Data\LevelDB/000003.log 
+2025/06/18-14:27:08.330 2478 Reusing MANIFEST E:\code\opener\kitchek\app\data1\Default\Sync Data\LevelDB/MANIFEST-000001
+2025/06/18-14:27:08.338 2478 Recovering log #3
+2025/06/18-14:27:08.338 2478 Reusing old log E:\code\opener\kitchek\app\data1\Default\Sync Data\LevelDB/000003.log 

@@ -1,0 +1,9 @@
+2025/06/18-14:29:25.743 2ff4 Reusing MANIFEST E:\code\opener\kitchek\app\data2\Default\Local Storage\leveldb/MANIFEST-000001
+2025/06/18-14:29:25.750 2ff4 Recovering log #3
+2025/06/18-14:29:25.753 2ff4 Reusing old log E:\code\opener\kitchek\app\data2\Default\Local Storage\leveldb/000003.log 
+2025/06/18-15:14:12.470 2ff4 Level-0 table #5: started
+2025/06/18-15:14:12.477 2ff4 Level-0 table #5: 32098 bytes OK
+2025/06/18-15:14:12.486 2ff4 Delete type=0 #3
+2025/06/18-16:26:32.246 2730 Level-0 table #7: started
+2025/06/18-16:26:32.254 2730 Level-0 table #7: 19529 bytes OK
+2025/06/18-16:26:32.262 2730 Delete type=0 #4

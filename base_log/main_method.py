@@ -138,6 +138,26 @@ def get_shop_urls(page:Chromium,card:str): # 后期可以改成直接传入页�
     log_to_text(f"解析商品耗时{time.time()-start_time}秒")
     return shop_list,link_list
 
+
+def listen_shop_urls(page:Chromium):
+    """监听商品链接"""
+    
+    start_time = time.time()
+    page.listen.start('/products?keywords=chrome%20hearts%20')
+    print(f"已经设置监听，用时{time.time()-start_time}秒")
+    startime = time.time()
+    page.refresh()
+    print(f"刷新页面用时{time.time()-startime}秒")
+    startime = time.time()
+    res = page.listen.wait()
+    log_to_text(f"监听到的数据是{res}")
+    log_to_text(f"监听商品链接耗时{time.time()-startime}秒")
+    print(f"总耗时{time.time()-start_time}秒")
+
+
+
+
+
     
 def parse_cookie_string(cookie_str):
     """
@@ -555,11 +575,12 @@ def start_listen_shop():
 
 if __name__ == '__main__':
 
-    start_listen_shop()
+    # start_listen_shop()
     # test_account()
-    # co1 = ChromiumOptions().set_local_port(9226).set_user_data_path('data1')
-    # page = Chromium(co1)
-
+    co1 = ChromiumOptions().set_local_port(9228).set_user_data_path('data2')
+    page = Chromium(co1).latest_tab
+    # get_shop_urls(page,"all")
+    listen_shop_urls(page)
 
 
 
