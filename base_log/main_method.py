@@ -11,6 +11,8 @@ from typing import Optional, Union,Tuple, Literal
 import json
 from pathlib import Path
 from base.logger_service import log_to_text
+from base.ConfigManagerINI import ConfigManager
+config = ConfigManager()
 
 
 Settings.set_language('zh_cn')  # 设置为中文时，填入'zh_cn'
@@ -426,6 +428,11 @@ def open_url_in_tab(page, url):
 
     while True:
         """循环刷新和获取页面商品链接"""
+        listen_start = config.load("start_config","listen_shop")
+        if listen_start == "stop":
+            log_to_text("停止监听商品")
+            break
+
         start_time = time.time()
         try:
             _,link_list = get_shop_urls(tab,"all") # 得到页面中的商品链接
@@ -560,10 +567,10 @@ def get_url_set():
     # log_to_text("全局变量中存储的URL集合：",gv.get_global_var('global_url_set'))
 
 
-def start_listen_shop():
+def start_listen_shop(status:str):
     """开始监听商品"""
     log_to_text("开始监听商品")
-
+    stop_listen_shop(status)
     # TODO 后期这里开始启用多进程方案进行商品监听
     get_url_set()
     co1 = ChromiumOptions().set_local_port(9226).set_user_data_path('data1')
@@ -574,6 +581,9 @@ def start_listen_shop():
 
     open_urls_concurrently(page,url_list)
 
+def stop_listen_shop(status:str):
+    """停止监听商品"""
+    config.update_options("start_config","listen_shop",status)
 
 
 

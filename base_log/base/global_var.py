@@ -1,7 +1,7 @@
 """全局变量"""
 user_info_dict = {} # 用于保存用户信息，后期要设置字典默认值，防止后期拉取字段出错
 app_info_dict = {} # 应用信息
-CONFIG_FILE = 'base/config.ini'
+CONFIG_FILE = 'base_log/base/config.ini'
 version = "1.0.25.4.17"
 
 user_cookies = {}

@@ -1,2 +1,3 @@
-2025/06/18-14:20:18.627 76e0 Creating DB E:\code\opener\kitchek\app\data1\Default\Local Storage\leveldb since it was missing.
-2025/06/18-14:20:18.793 76e0 Reusing MANIFEST E:\code\opener\kitchek\app\data1\Default\Local Storage\leveldb/MANIFEST-000001
+2025/06/18-14:27:08.388 62a8 Reusing MANIFEST E:\code\opener\kitchek\app\data1\Default\Local Storage\leveldb/MANIFEST-000001
+2025/06/18-14:27:08.391 62a8 Recovering log #3
+2025/06/18-14:27:08.394 62a8 Reusing old log E:\code\opener\kitchek\app\data1\Default\Local Storage\leveldb/000003.log 
