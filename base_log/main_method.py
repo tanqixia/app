@@ -153,7 +153,7 @@ def listen_shop_urls(page:Chromium):
     log_to_text(f"监听到的数据是{res}")
     log_to_text(f"监听商品链接耗时{time.time()-startime}秒")
     print(f"总耗时{time.time()-start_time}秒")
-
+    
 
 
 
